@@ -1,6 +1,6 @@
 ---
-name: Bug template
-about: Issue guidelines for explorer7 bug reporting
+name: Bug report
+about: Issue guidelines for any issues related to the current explorer7 codebase.
 title: 'Bug: '
 labels: ''
 assignees: ''
