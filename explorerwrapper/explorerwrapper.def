@@ -1,0 +1,6 @@
+/*LIBRARY WRP32.DLL BASE=0x10000000*/
+
+EXPORTS
+	PathBuildRootW = KERNEL32.LoadLibraryExW
+
+	

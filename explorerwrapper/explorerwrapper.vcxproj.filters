@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Source code files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="targetver.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="forwards.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="startmenuresolver.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="appresolvernotify.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="systraywrapper.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="immersiveshell.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="traynotify.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="authui.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="startmenupin.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnumStartMenu.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="userassist.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="dbgprint.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="trash.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="immersivefactory.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="projection.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="autoplay.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="pinnedlist.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="thememanager.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="MinHook.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="version.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="registry.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="taskscheduler.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="destinationlist.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="nsctree.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="cregtree.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="augmentedshellfolder.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="shell32_wrappers.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="shellitemfilter.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="shellurl.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="dbgprint.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="startmenuresolver.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="appresolvernotify.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="systraywrapper.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="immersiveshell.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="traynotify.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="authui.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="startmenupin.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="EnumStartMenu.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="userassist.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="immersivefactory.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="projection.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="autoplay.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="explorer_wrappers.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="shell32_wrappers.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="minCRT.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="pinnedlist.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="thememanager.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="version.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="registry.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="taskscheduler.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="destinationlist.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="cregtree.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="shellitemfilter.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="shellurl.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="wrapper.rc">
+      <Filter>Resource files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\icon1.ico">
+      <Filter>Resource files</Filter>
+    </Image>
+    <Image Include="res\start%401.25x.bmp">
+      <Filter>Resource files</Filter>
+    </Image>
+    <Image Include="res\start%401.5x.bmp">
+      <Filter>Resource files</Filter>
+    </Image>
+    <Image Include="res\start.bmp">
+      <Filter>Resource files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
