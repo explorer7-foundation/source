@@ -1,5 +1,5 @@
 <p align=center>
-  <img src="https://github.com/user-attachments/assets/10465c11-481a-4403-aeef-19149a776f17">
+  <img src="https://github.com/user-attachments/assets/c4d4ae3b-f9e0-49d5-90c6-ad115a2551b3">
 </p>
 
 explorer7 is a **wrapper library** that allows Windows 7's explorer.exe to run properly on modern Windows versions, aiming to bring back the original Windows 7 shell experience.
@@ -7,11 +7,11 @@ explorer7 is a **wrapper library** that allows Windows 7's explorer.exe to run p
 <details>
   <summary>Screenshots</summary>
 
-![image](https://github.com/user-attachments/assets/58eedfb5-f6ff-435d-97fb-8696eb39b3ad)
-![image](https://github.com/user-attachments/assets/eaaf450b-f368-4dbe-a6a0-92dcf538d697)
+![image](https://github.com/user-attachments/assets/f0d774c5-6f81-4985-ac11-5c867dd34094)
+![image](https://github.com/user-attachments/assets/8dd8b78f-fdc1-47ca-9dc6-cfa60e95b6c1)
 
-![image](https://github.com/user-attachments/assets/12d71c15-6d8c-4c33-ac80-54517352f160)
-![image](https://github.com/user-attachments/assets/1a3a90e4-5359-497d-b451-4d97d5edcb7e)
+![image](https://github.com/user-attachments/assets/2cff2aa4-85c4-4ca3-818c-e6d5c8096b1f)
+![image](https://github.com/user-attachments/assets/9f3fdb95-cb9f-4999-9cb5-92dedf4af505)
 
 </details>
 
@@ -63,7 +63,7 @@ For casual users, the **regular installation method** is listed below:
 3. Run ex7forw8.exe. The installer will ask for Windows 7 files. You can select any of the 2 options provided the installation media is mounted.
 4. You should see the following dialog if the installer succeeded:
    
-   ![image](https://github.com/user-attachments/assets/000d1a87-7297-4c58-93ba-03ea8cdb1035)
+   ![image](https://github.com/user-attachments/assets/4772d2b2-e355-4d85-82a5-efe2a1a18539) 
    
 5. If you wish to switch your shell to the Windows 7 explorer right now, use the option for it. You can always change back by running ex7forw8.exe once again and selecting the "Use Windows 8 explorer" option (this is currently misnamed, all it does is revert to your system's default shell)
 6. Enjoy!
@@ -125,7 +125,7 @@ By default, explorer.exe will not use the wrapper dll, so you have to change out
 1. Open CFF Explorer, drag explorer.exe into the window
 2. Open the "Import Directory" folder in the left sidebar
 3. Change out the imports for `SHLWAPI.DLL`, `OLE32.DLL` and (if applicable) `EXPLORERFRAME.DLL`:
-![image](https://github.com/user-attachments/assets/3122093d-8068-49c1-80a5-161468a65dfe)
+![image](https://github.com/user-attachments/assets/6e8acb56-4400-43be-a0c6-0f43ec20480f)
 4. Save the file.
 
 By now, you should be able to start `explorer.exe` from task manager or through other means. 
