@@ -1,4 +1,4 @@
-<p align=center>
+  <p align=center>
   <img src="https://github.com/user-attachments/assets/c4d4ae3b-f9e0-49d5-90c6-ad115a2551b3">
 </p>
 
@@ -15,7 +15,7 @@ explorer7 is a **wrapper library** that allows Windows 7's explorer.exe to run p
 
 </details>
 
-## Known issues (Milestone 2, last updated 29/11/24)
+## Known issues (Milestone 2, last updated 2024-11-29)
 
 **MAKE SURE YOU READ THESE FIRST SO YOU ARE AWARE OF WHAT YOU ARE GETTING INTO!**
 
