@@ -40,11 +40,12 @@ explorer7 is a **wrapper library** that allows Windows 7's explorer.exe to run p
 
 **Windows 7 limitations/bugs**
 
-None of the following will be accounted for in explorer7:
+All of the following are bugs/limitations within Windows 7's Explorer itself, and will be accounted for in explorer7:
 
 - Multi-monitor taskbars are not supported. These would be introduced by Windows 8 build 7779.
 - Startup items defined in the modern task manager are not accounted for. You must use the old msconfig.exe.
-- It takes some time to save changes to the size and position of the taskbar.
+- It takes a few minutes for changes to the size and position of the taskbar to be written to the registry; restarting Explorer before that will revert those changes.
+- While the small taskbar is enabled, changing the position to top or bottom from the properties window (NOT from dragging) will allocate extra appbar space, and there will be a gap between the taskbar and the working area.
 
 ## Installation Guide
 
