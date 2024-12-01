@@ -40,7 +40,7 @@ explorer7 is a **wrapper library** that allows Windows 7's explorer.exe to run p
 
 **Windows 7 limitations/bugs**
 
-All of the following are bugs/limitations within Windows 7's Explorer itself, and will be accounted for in explorer7:
+All of the following are bugs/limitations within Windows 7's Explorer itself, and won't be accounted for in explorer7:
 
 - Multi-monitor taskbars are not supported. These would be introduced by Windows 8 build 7779.
 - Startup items defined in the modern task manager are not accounted for. You must use the old msconfig.exe.
