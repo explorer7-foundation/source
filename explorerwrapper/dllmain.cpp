@@ -1630,16 +1630,16 @@ UINT WINAPI RegisterWindowMessageWNEW(LPCWSTR lpString)
 // experimental hotkey fix 3 - buggy results but *does* appear to work
 HRESULT(__fastcall* CTaskBand_HandleShellHook)(PVOID ctaskband, int id, HWND a3);
 
-HRESULT(__fastcall* OnShellHookMessage)(void* a1);
-HRESULT OnShellHookMessage_Hook(void* a1) //gets called when start menu is to be opened - a bit temperamental
+HRESULT(__fastcall* OnShellHookMessage)(void* a1, unsigned __int64 id, HWND a3);
+HRESULT OnShellHookMessage_Hook(void* a1, unsigned __int64 id, HWND a3) //gets called when start menu is to be opened - a bit temperamental
 {
 	// key to note: at the moment, we can either do this for bugged start menu behaviour, or we can return S_OK and have no menu on the hotkey at all.
 	// neither is ideal, but we can probably ship m2 like this and fix properly later
 
-	if (CtaskBandPtr)
-		return CTaskBand_HandleShellHook(CtaskBandPtr,7,0);
+	if (CtaskBandPtr && id == 7)
+		return CTaskBand_HandleShellHook(CtaskBandPtr,7,a3);
 
-	return OnShellHookMessage(a1);
+	return OnShellHookMessage(a1,id,a3);
 }
 
 // Ittr: Get rid of the immersive start menu and stop it appearing on TH1+ when UWP is on.
@@ -1864,15 +1864,15 @@ void HookAPIs()
 	fRegisterWindowMessageW = (decltype(fRegisterWindowMessageW))GetProcAddress(LoadLibraryW(L"user32.dll"),"RegisterWindowMessageW");
 
 	// disabled - <1607 doesnt like atm + unfinished. sorry! uncomment if you're testing
-	//CTaskBand_HandleShellHook = (decltype(CTaskBand_HandleShellHook))FindPattern((uintptr_t)GetModuleHandle(0), "48 89 5C 24 08 55 56 57 41 54 41 55 48 83 EC ?? 83 FA 07");
-	//OnShellHookMessage = (decltype(OnShellHookMessage))FindPattern((uintptr_t)LoadLibraryW(L"twinui.pcshell.dll"), "40 53 48 83 EC 20 48 8B D9 48 8B 89 ?? ?? ?? ?? 48 85 C9 74 ?? 48 8B 01 48 8B 40 ?? FF 15 ?? ?? ?? ?? 84 C0 0F 85 ?? ?? ?? ?? 38 83");
+	CTaskBand_HandleShellHook = (decltype(CTaskBand_HandleShellHook))FindPattern((uintptr_t)GetModuleHandle(0), "48 89 5C 24 08 55 56 57 41 54 41 55 48 83 EC ?? 83 FA 07");
+	OnShellHookMessage = (decltype(OnShellHookMessage))FindPattern((uintptr_t)LoadLibraryW(L"twinui.pcshell.dll"), "40 53 48 83 EC 20 48 8B D9 48 8B 89 ?? ?? ?? ?? 48 85 C9 74 ?? 48 8B 01 48 8B 40 ?? FF 15 ?? ?? ?? ?? 84 C0 0F 85 ?? ?? ?? ?? 38 83");
 
 	// Hook UXTheme-related calls for the purpose of our inactive theme system.
 	MH_CreateHook(static_cast<LPVOID>(fOpenThemeData), OpenThemeData_Hook, reinterpret_cast<LPVOID*>(&fOpenThemeData));
 	MH_CreateHook(static_cast<LPVOID>(fOpenThemeDataForDpi), OpenThemeDataForDpi_Hook, reinterpret_cast<LPVOID*>(&fOpenThemeDataForDpi));
 	MH_CreateHook(static_cast<LPVOID>(fOpenThemeDataEx), OpenThemeDataEx_Hook, reinterpret_cast<LPVOID*>(&fOpenThemeDataEx));
 	// disabled - <1607 doesnt like atm + unfinished. sorry! uncomment if you're testing
-	//MH_CreateHook(static_cast<LPVOID>(OnShellHookMessage), OnShellHookMessage_Hook, reinterpret_cast<LPVOID*>(&OnShellHookMessage));
+	MH_CreateHook(static_cast<LPVOID>(OnShellHookMessage), OnShellHookMessage_Hook, reinterpret_cast<LPVOID*>(&OnShellHookMessage));
 
 	// Hook and update definitions of what windows should be added to the tray - largely for UWP purposes, but essentially zero-cost so included on both immersive on and off modes.
 	void* _ShouldAddWindowToTray = (void*)FindPattern((uintptr_t)GetModuleHandle(0), "48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B F9 33 DB");
