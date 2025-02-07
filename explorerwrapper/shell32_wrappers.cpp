@@ -1,14 +1,12 @@
-#include "framework.h"
-#include "autoplay.h"
+#include "common.h"
+#include "AutoPlay.h"
 #include "dbgprint.h"
-#include "version.h"
+#include "OSVersion.h"
 #include "shell32_wrappers.h"
-#include "augmentedshellfolder.h"
+#include "AugmentedShellFolder.h"
 #include "MinHook.h"
-#include "knownfolders.h"
-#include "registry.h"
-
-DWORD bEnableUWPAppsInStart = true;
+#include "KnownFolders.h"
+#include "RegistryManager.h"
 
 typedef PVOID (WINAPI *ResolveDelayLoadedAPIAPI)(PVOID ParentModuleBase, PVOID DelayloadDescriptor, PVOID FailureDllHook, PVOID FailureSystemHook,PIMAGE_THUNK_DATA ThunkAddress,ULONG Flags);
 static ResolveDelayLoadedAPIAPI ResolveDelayLoadedAPI;
@@ -91,6 +89,8 @@ HRESULT __stdcall Shell32_DllGetClassObject_Hook(REFCLSID rclsid, const IID* con
 
 void HookShell32()
 {
+	HMODULE shell32 = LoadLibrary(L"shell32.dll");
+
 	dbgprintf(L"1\n");
 	ResolveDelayLoadedAPI = (ResolveDelayLoadedAPIAPI)GetProcAddress(GetModuleHandle(L"kernel32.dll"),"ResolveDelayLoadedAPI");
 	ChangeImportedAddress(GetModuleHandle(L"shell32.dll"), "API-MS-WIN-CORE-DELAYLOAD-L1-1-1.DLL", ResolveDelayLoadedAPI, ResolveDelayLoadedAPINEW);
@@ -107,29 +107,48 @@ void HookShell32()
 	dbgprintf(L"5\n");
 	//auto ordinal902 = GetProcAddress(LoadLibrary(L"shell32.dll"),(LPSTR)902);
 	//ChangeImportedAddress(LoadLibrary(L"shell32.dll"),"shlwapi.DLL", GetProcAddress(LoadLibrary(L"shlwapi.dll"), "SHAboutInfo"), SHAboutInfoWNEW);
-	ChangeImportedAddress(GetModuleHandle(0),"shell32.DLL", GetProcAddress(LoadLibrary(L"shell32.DLL"), (LPSTR)902), IsSearchEnabledNEW);
+	ChangeImportedAddress(GetModuleHandle(0),"shell32.DLL", GetProcAddress(shell32, (LPSTR)902), IsSearchEnabledNEW);
 
 	//ChangeImportedAddress(GetModuleHandle(0),"shell32.DLL", GetProcAddress(LoadLibrary(L"shell32.DLL"), (LPSTR)719), SHParseDarwinIDFromCacheWNew);
 
 	//todo: evaluate if this is needed
-	ChangeImportedAddress(GetModuleHandle(0),"shell32.DLL", GetProcAddress(LoadLibrary(L"shell32.DLL"), "ILIsEqual"), ILIsEqualNEW);
+	ChangeImportedAddress(GetModuleHandle(0),"shell32.DLL", GetProcAddress(shell32, "ILIsEqual"), ILIsEqualNEW);
 
-	uintptr_t Win32PinCheck = FindPattern((uintptr_t)LoadLibrary(L"shell32.dll"), "41 8B E9 49 8B F0 48 8B DA 48 8B F9 48 8D 0D ?? ?? ?? ?? E8");
-	if (Win32PinCheck && g_osVersion.BuildNumber() >= 19045)
+	uintptr_t Win32PinCheck = FindPattern((uintptr_t)shell32, "41 8B E9 49 8B F0 48 8B DA 48 8B F9 48 8D 0D ?? ?? ?? ?? E8");
+	if (g_osVersion.BuildNumber() >= 19045 && g_osVersion.BuildNumber() < 26100)
 	{
-		dbgprintf(L"Win32PinCheck %i", Win32PinCheck);
-		Win32PinCheck += 19;
-		uint8_t* bytes = (uint8_t*)(Win32PinCheck + 5 + *reinterpret_cast<int32_t*>(Win32PinCheck + 1));
-		DWORD old;
-		VirtualProtect(bytes, 3, PAGE_EXECUTE_READWRITE, &old);
-		bytes[0] = 0xB0;
-		bytes[1] = 0x00;
-		bytes[2] = 0xC3;
-		VirtualProtect(bytes, 3, old, 0);
+		if (Win32PinCheck)
+		{
+			dbgprintf(L"Win32PinCheck %i", Win32PinCheck);
+			Win32PinCheck += 19;
+			uint8_t* bytes = (uint8_t*)(Win32PinCheck + 5 + *reinterpret_cast<int32_t*>(Win32PinCheck + 1));
+			DWORD old;
+			VirtualProtect(bytes, 3, PAGE_EXECUTE_READWRITE, &old);
+			bytes[0] = 0xB0;
+			bytes[1] = 0x00;
+			bytes[2] = 0xC3;
+			VirtualProtect(bytes, 3, old, 0);
+		}
+		else // Microsoft added a new signature for this in later 23H2 updates
+		{
+			uintptr_t Win32PinCheck2 = FindPattern((uintptr_t)shell32, "45 8B F1 49 8B F0 48 8B DA 48 8B F9 48 8D 0D ?? ?? ?? ?? E8");
+
+			if (Win32PinCheck2)
+			{
+				dbgprintf(L"Win32PinCheck2 %i", Win32PinCheck2);
+				Win32PinCheck2 += 19;
+				uint8_t* bytes = (uint8_t*)(Win32PinCheck2 + 5 + *reinterpret_cast<int32_t*>(Win32PinCheck2 + 1));
+				DWORD old;
+				VirtualProtect(bytes, 3, PAGE_EXECUTE_READWRITE, &old);
+				bytes[0] = 0xB0;
+				bytes[1] = 0x00;
+				bytes[2] = 0xC3;
+				VirtualProtect(bytes, 3, old, 0);
+			}
+		}
 	}
 	
 	dbgprintf(L"6\n");
-	g_registry.QueryValue(L"EnableUWPAppsInStart",(LPBYTE)&bEnableUWPAppsInStart,sizeof(DWORD));
 }
 
 HRESULT BindToDesktop(LPCITEMIDLIST pidl, IShellFolder** ppsfResult)
@@ -222,7 +241,7 @@ static HRESULT GetMergedFolders(const MERGEDFOLDERINFO* Folders, int length, ISh
 	*ppsfStartMenu = NULL;
 	hr = CoCreateInstance(CLSID_MergedFolder, 0LL, 1u, IID_IAugmentedFolder, (LPVOID*)&pasf);
 
-	if (bEnableUWPAppsInStart)
+	if (s_ShowStoreAppsInStart)
 	{
 		IShellItem* shellItem;
 		IShellFolder* AppsFolder;

@@ -1,5 +1,5 @@
 #pragma once
-#include "framework.h"
+#include "common.h"
 #include <cstdint>
 
 extern "C" void * _ReturnAddress(void);
@@ -379,7 +379,6 @@ inline void DetourCall(void* Target, void* Detour)
 	//install the hook
 	memcpy(Target, jmpInstruction, sizeof(jmpInstruction));
 }
-
 
 //Ittr: Consolidated function for pattern byte replacements.
 static void ChangeImportedPattern(void* dllPattern, const unsigned char* newBytes, SIZE_T size) //thank you wiktor

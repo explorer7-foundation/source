@@ -187,47 +187,59 @@
     <PreBuildEvent>
       <Command>if exist ..\minhook\build\VC17\lib\Release\libMinHook.x64.lib copy /Y ..\minhook\build\VC17\lib\Release\libMinHook.x64.lib $(ProjectDir)</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="appresolvernotify.h" />
-    <ClInclude Include="augmentedshellfolder.h" />
-    <ClInclude Include="authui.h" />
-    <ClInclude Include="autoplay.h" />
-    <ClInclude Include="cregtree.h" />
+    <ClInclude Include="AddressImports.h" />
+    <ClInclude Include="AppResolverNotify.h" />
+    <ClInclude Include="AugmentedShellFolder.h" />
+    <ClInclude Include="AuthUI.h" />
+    <ClInclude Include="AutoPlay.h" />
+    <ClInclude Include="MinhookImports.h" />
+    <ClInclude Include="PatternImports.h" />
+    <ClInclude Include="RegTreeOptions.h" />
     <ClInclude Include="dbgprint.h" />
-    <ClInclude Include="destinationlist.h" />
+    <ClInclude Include="DestinationList.h" />
     <ClInclude Include="EnumStartMenu.h" />
     <ClInclude Include="forwards.h" />
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="immersivefactory.h" />
-    <ClInclude Include="immersiveshell.h" />
+    <ClInclude Include="common.h" />
+    <ClInclude Include="ImmersiveFactory.h" />
+    <ClInclude Include="ImmersiveShell.h" />
     <ClInclude Include="MinHook.h" />
-    <ClInclude Include="nsctree.h" />
-    <ClInclude Include="pinnedlist.h" />
-    <ClInclude Include="projection.h" />
-    <ClInclude Include="registry.h" />
+    <ClInclude Include="NscTree.h" />
+    <ClInclude Include="PinnedList.h" />
+    <ClInclude Include="ProjectionFactory.h" />
+    <ClInclude Include="RegistryManager.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="shell32_wrappers.h" />
-    <ClInclude Include="shellitemfilter.h" />
-    <ClInclude Include="shellurl.h" />
-    <ClInclude Include="startmenupin.h" />
-    <ClInclude Include="startmenuresolver.h" />
-    <ClInclude Include="systraywrapper.h" />
+    <ClInclude Include="StartMenuItemFilter.h" />
+    <ClInclude Include="ShellURL.h" />
+    <ClInclude Include="StartMenuPin.h" />
+    <ClInclude Include="StartMenuResolver.h" />
+    <ClInclude Include="TrayObject.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="taskscheduler.h" />
-    <ClInclude Include="thememanager.h" />
+    <ClInclude Include="ShellTaskScheduler.h" />
+    <ClInclude Include="ThemeManager.h" />
     <ClInclude Include="trash.h" />
-    <ClInclude Include="traynotify.h" />
-    <ClInclude Include="userassist.h" />
-    <ClInclude Include="version.h" />
+    <ClInclude Include="TrayNotify.h" />
+    <ClInclude Include="TypeDefinitions.h" />
+    <ClInclude Include="UserAssist.h" />
+    <ClInclude Include="OSVersion.h" />
+    <ClInclude Include="OptionConfig.h" />
+    <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="appresolvernotify.cpp" />
-    <ClCompile Include="authui.cpp" />
-    <ClCompile Include="autoplay.cpp" />
-    <ClCompile Include="cregtree.cpp" />
+    <ClCompile Include="AppResolverNotify.cpp" />
+    <ClCompile Include="AuthUI.cpp" />
+    <ClCompile Include="AutoPlay.cpp" />
+    <ClCompile Include="OptionConfig.cpp" />
+    <ClCompile Include="PatternImports.cpp" />
+    <ClCompile Include="RegTreeOptions.cpp" />
     <ClCompile Include="dbgprint.cpp" />
-    <ClCompile Include="destinationlist.cpp" />
+    <ClCompile Include="DestinationList.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
@@ -243,31 +255,31 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="EnumStartMenu.cpp" />
-    <ClCompile Include="immersivefactory.cpp" />
-    <ClCompile Include="immersiveshell.cpp" />
+    <ClCompile Include="ImmersiveFactory.cpp" />
+    <ClCompile Include="ImmersiveShell.cpp" />
     <ClCompile Include="minCRT.cpp">
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</WholeProgramOptimization>
     </ClCompile>
-    <ClCompile Include="pinnedlist.cpp" />
-    <ClCompile Include="projection.cpp" />
-    <ClCompile Include="registry.cpp" />
+    <ClCompile Include="PinnedList.cpp" />
+    <ClCompile Include="ProjectionFactory.cpp" />
+    <ClCompile Include="RegistryManager.cpp" />
     <ClCompile Include="shell32_wrappers.cpp" />
-    <ClCompile Include="shellitemfilter.cpp" />
-    <ClCompile Include="shellurl.cpp" />
-    <ClCompile Include="startmenupin.cpp" />
-    <ClCompile Include="startmenuresolver.cpp">
+    <ClCompile Include="StartMenuItemFilter.cpp" />
+    <ClCompile Include="ShellURL.cpp" />
+    <ClCompile Include="StartMenuPin.cpp" />
+    <ClCompile Include="StartMenuResolver.cpp">
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</WholeProgramOptimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</WholeProgramOptimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</WholeProgramOptimization>
     </ClCompile>
-    <ClCompile Include="systraywrapper.cpp" />
-    <ClCompile Include="taskscheduler.cpp" />
-    <ClCompile Include="thememanager.cpp" />
-    <ClCompile Include="traynotify.cpp" />
-    <ClCompile Include="userassist.cpp" />
+    <ClCompile Include="TrayObject.cpp" />
+    <ClCompile Include="ShellTaskScheduler.cpp" />
+    <ClCompile Include="ThemeManager.cpp" />
+    <ClCompile Include="TrayNotify.cpp" />
+    <ClCompile Include="UserAssist.cpp" />
     <ClCompile Include="explorer_wrappers.cpp" />
-    <ClCompile Include="version.cpp" />
+    <ClCompile Include="OSVersion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="wrapper.rc" />

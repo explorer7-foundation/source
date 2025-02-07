@@ -1,5 +1,6 @@
 #pragma once
-#include "framework.h"
+#include "common.h"
+#include "OptionConfig.h"
 
 #pragma region GUID definitions
 DEFINE_GUID(CLSID_ProgramsFolder, 0x7BE9D83C, 0x0A729, 0x4D97, 0x0B5, 0x0A7, 0x1B, 0x73, 0x13, 0x0C3, 0x9E, 0x0A);

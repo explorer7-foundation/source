@@ -1,16 +1,13 @@
-#include "framework.h"
+#include "common.h"
 #pragma warning(disable:4273)
 #pragma function(memcpy)
 #pragma function(memset)
 #pragma function(memcmp)
 
-
 void* calloc(size_t count, size_t size)
 {
 	return HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, count * size);
 }
-
-
 
 void* recalloc(void* ptr, size_t size)
 {

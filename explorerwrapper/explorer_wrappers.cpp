@@ -1,4 +1,4 @@
-#include "framework.h"
+#include "common.h"
 
 extern "C" DWORD WINAPI SHGetSignature(DWORD p1, DWORD p2, DWORD p3)
 {

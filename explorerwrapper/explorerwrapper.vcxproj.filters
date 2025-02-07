@@ -21,31 +21,31 @@
     <ClInclude Include="forwards.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="startmenuresolver.h">
+    <ClInclude Include="StartMenuResolver.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="appresolvernotify.h">
+    <ClInclude Include="AppResolverNotify.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="systraywrapper.h">
+    <ClInclude Include="TrayObject.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="immersiveshell.h">
+    <ClInclude Include="ImmersiveShell.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="traynotify.h">
+    <ClInclude Include="TrayNotify.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="authui.h">
+    <ClInclude Include="AuthUI.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="startmenupin.h">
+    <ClInclude Include="StartMenuPin.h">
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="EnumStartMenu.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="userassist.h">
+    <ClInclude Include="UserAssist.h">
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="dbgprint.h">
@@ -54,58 +54,76 @@
     <ClInclude Include="trash.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="immersivefactory.h">
+    <ClInclude Include="ImmersiveFactory.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="projection.h">
+    <ClInclude Include="ProjectionFactory.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="autoplay.h">
+    <ClInclude Include="AutoPlay.h">
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="pinnedlist.h">
+    <ClInclude Include="PinnedList.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="thememanager.h">
+    <ClInclude Include="ThemeManager.h">
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="MinHook.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="version.h">
+    <ClInclude Include="OSVersion.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="registry.h">
+    <ClInclude Include="RegistryManager.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="taskscheduler.h">
+    <ClInclude Include="ShellTaskScheduler.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="destinationlist.h">
+    <ClInclude Include="DestinationList.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="nsctree.h">
+    <ClInclude Include="NscTree.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="cregtree.h">
+    <ClInclude Include="RegTreeOptions.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="framework.h">
+    <ClInclude Include="common.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="augmentedshellfolder.h">
+    <ClInclude Include="AugmentedShellFolder.h">
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="shell32_wrappers.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="shellitemfilter.h">
+    <ClInclude Include="StartMenuItemFilter.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="shellurl.h">
+    <ClInclude Include="ShellURL.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionConfig.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="AddressImports.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeDefinitions.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="PatternImports.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="util.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="MinhookImports.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -116,40 +134,40 @@
     <ClCompile Include="dbgprint.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="startmenuresolver.cpp">
+    <ClCompile Include="StartMenuResolver.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="appresolvernotify.cpp">
+    <ClCompile Include="AppResolverNotify.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="systraywrapper.cpp">
+    <ClCompile Include="TrayObject.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="immersiveshell.cpp">
+    <ClCompile Include="ImmersiveShell.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="traynotify.cpp">
+    <ClCompile Include="TrayNotify.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="authui.cpp">
+    <ClCompile Include="AuthUI.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="startmenupin.cpp">
+    <ClCompile Include="StartMenuPin.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
     <ClCompile Include="EnumStartMenu.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="userassist.cpp">
+    <ClCompile Include="UserAssist.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="immersivefactory.cpp">
+    <ClCompile Include="ImmersiveFactory.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="projection.cpp">
+    <ClCompile Include="ProjectionFactory.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="autoplay.cpp">
+    <ClCompile Include="AutoPlay.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
     <ClCompile Include="explorer_wrappers.cpp">
@@ -161,31 +179,37 @@
     <ClCompile Include="minCRT.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="pinnedlist.cpp">
+    <ClCompile Include="PinnedList.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="thememanager.cpp">
+    <ClCompile Include="ThemeManager.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="version.cpp">
+    <ClCompile Include="OSVersion.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="registry.cpp">
+    <ClCompile Include="RegistryManager.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="taskscheduler.cpp">
+    <ClCompile Include="ShellTaskScheduler.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="destinationlist.cpp">
+    <ClCompile Include="DestinationList.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="cregtree.cpp">
+    <ClCompile Include="RegTreeOptions.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="shellitemfilter.cpp">
+    <ClCompile Include="StartMenuItemFilter.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
-    <ClCompile Include="shellurl.cpp">
+    <ClCompile Include="ShellURL.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="OptionConfig.cpp">
+      <Filter>Source code files</Filter>
+    </ClCompile>
+    <ClCompile Include="PatternImports.cpp">
       <Filter>Source code files</Filter>
     </ClCompile>
   </ItemGroup>
