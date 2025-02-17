@@ -35,9 +35,6 @@
 
 LRESULT CALLBACK NewTrayProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	//if (s_EnableImmersiveShellStack == 1)
-		//SetProgmanAsShell(); // misha: TODO hack
-
 	if (uMsg == 0x56D) return 0;
 	if (uMsg == ThemeChangeMessage) //reinit thememanager on themechanged, so that inactive msstyles is updated
 	{
@@ -453,17 +450,6 @@ void HookImmersive()
 		ChangeImportedAddress(GetModuleHandle(L"twinapi.dll"), "user32.dll", CreateWindowInBandOrig, CreateWindowInBandNew);
 		ChangeImportedAddress(GetModuleHandle(L"Windows.UI.dll"), "user32.dll", CreateWindowInBandOrig, CreateWindowInBandNew);
 	}
-}
-
-FARPROC
-WINAPI
-GetProcAddress_Hook(
-	HMODULE hModule,
-	LPCSTR lpProcName
-)
-{
-	//dbgprintf(L"GetProcAddress Hook\n");
-	return GetProcAddress(hModule, lpProcName);
 }
 
 // Basically this allows explorer to actually work on builds >9200

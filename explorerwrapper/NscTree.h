@@ -59,7 +59,7 @@ static void __fastcall CNscTree_ScaleAndSetIndent(__int64 a1)
 	int v6; // [rsp+38h] [rbp+10h] BYREF
 	int extraOffset = 0;
 
-	if (g_osVersion.BuildNumber() >= 26100 || (g_osVersion.BuildNumber() >= 22631 && g_osVersion.BuildRevision() >= 4746)) // Ittr: Handle windows 11 offset difference. Inefficient but simplified code wasnt working
+	if (g_osVersion.BuildNumber() >= 26100 || (g_osVersion.BuildNumber() >= 22621 && g_osVersion.BuildRevision() >= 4602)) // Ittr: Handle windows 11 offset difference. Inefficient but simplified code wasnt working
 		extraOffset = 16;
 	else if (g_osVersion.BuildNumber() >= 21996)
 		extraOffset = 8;
@@ -74,7 +74,7 @@ static void __fastcall CNscTree_SetIndentValue(__int64 a1, int a2)
 {
 	int extraOffset = 0;
 
-	if (g_osVersion.BuildNumber() >= 26100 || (g_osVersion.BuildNumber() >= 22631 && g_osVersion.BuildRevision() >= 4746)) // Ittr: Handle windows 11 offset difference. Inefficient but simplified code wasnt working
+	if (g_osVersion.BuildNumber() >= 26100 || (g_osVersion.BuildNumber() >= 22621 && g_osVersion.BuildRevision() >= 4602)) // Ittr: Handle windows 11 offset difference. Inefficient but simplified code wasnt working
 		extraOffset = 16;
 	else if (g_osVersion.BuildNumber() >= 21996)
 		extraOffset = 8;
@@ -94,7 +94,7 @@ static void __fastcall CNscTree_ScaleAndSetRowHeight(__int64 a1)
 	int v9; // eax
 	int extraOffset = 0;
 
-	if (g_osVersion.BuildNumber() >= 26100 || (g_osVersion.BuildNumber() >= 22631 && g_osVersion.BuildRevision() >= 4746)) // Ittr: Handle windows 11 offset difference. Inefficient but simplified code wasnt working
+	if (g_osVersion.BuildNumber() >= 26100 || (g_osVersion.BuildNumber() >= 22621 && g_osVersion.BuildRevision() >= 4602)) // Ittr: Handle windows 11 offset difference. Inefficient but simplified code wasnt working
 		extraOffset = 16;
 	else if (g_osVersion.BuildNumber() >= 21996)
 		extraOffset = 8;
@@ -128,7 +128,7 @@ static __int64 __fastcall CNscTree_SetItemHeight(__int64 a1, int a2)
 {
 	int extraOffset = 0;
 
-	if (g_osVersion.BuildNumber() >= 26100 || (g_osVersion.BuildNumber() >= 22631 && g_osVersion.BuildRevision() >= 4746)) // Ittr: Handle windows 11 offset difference. Inefficient but simplified code wasnt working
+	if (g_osVersion.BuildNumber() >= 26100 || (g_osVersion.BuildNumber() >= 22621 && g_osVersion.BuildRevision() >= 4602)) // Ittr: Handle windows 11 offset difference. Inefficient but simplified code wasnt working
 		extraOffset = 16;
 	else if (g_osVersion.BuildNumber() >= 21996)
 		extraOffset = 8;

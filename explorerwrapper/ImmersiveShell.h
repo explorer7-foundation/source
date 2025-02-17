@@ -102,5 +102,3 @@ interface IImmersiveWindowMessageService : IUnknown
 	STDMETHOD(UnrequestPointerDeviceNotification)(UINT dwCookie);
 	STDMETHOD(RegisterDwmIconicThumbnailWindow)();
 };
-
-void SetProgmanAsShell();

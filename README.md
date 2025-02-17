@@ -32,7 +32,6 @@ These issues, unless specified to have been resolved in a later Windows version,
 - The taskbar might overlap fullscreen applications whilst immersive shell is enabled (1507+).
 - If a user has StartIsBack++ installed, it may attempt to erroneously hook the shell, causing both visual and functional issues.
 - "Settings" is duplicated in the start menu program list (1607-22H2, fixed system-wide in Windows 11).
-- Minimizing applications within the taskbar may cause the program to remain active when the immersive shell is enabled (1507+).
 
 **Windows 11**
 - BlurBehind colorization mode no longer works due to the removal of the relevant accent policy (22H2+).

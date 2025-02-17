@@ -266,7 +266,7 @@ void SetProgramListNscTreeAttributes()
 
 void HandleThumbnailColorization()
 {
-	// thumbnail fix
+	// Thumbnail rendering fix for colorization modes
 	if (g_osVersion.BuildNumber() >= 10074) // we don't apply to 8.1 as only pseudo-aero is supported there
 	{
 		void* _thumbnailrender = (void*)FindPattern((uintptr_t)GetModuleHandle(0), "48 8B C4 48 89 58 08 48 89 68 10 48 89 70 20 44 89 40 18 57 41 54 41 55 41 56 41 57 48 81 EC 90 00 00 00 48 8B F9");
@@ -326,7 +326,6 @@ void CreateImmersiveShell()
 		MH_CreateHook(GetProcAddress(GetModuleHandle(L"user32.dll"), (LPCSTR)2513), RetTrue, NULL); // SetActiveProcessForMonitor
 		MH_CreateHook(GetProcAddress(GetModuleHandle(L"user32.dll"), (LPCSTR)2564), RetTrue, NULL); // RegisterWindowArrangementCallout
 		MH_CreateHook(GetProcAddress(GetModuleHandle(L"user32.dll"), (LPCSTR)2567), RetTrue, NULL); // EnableShellWindowManagementBehavior
-		MH_CreateHook(GetProcAddress(GetModuleHandle(L"user32.dll"), "AllowSetForegroundWindow"), RetTrue, NULL);
 	}
 }
 
