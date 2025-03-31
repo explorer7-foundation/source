@@ -1,6 +1,13 @@
 #pragma once
 #include "common.h"
 
+////
+// 
+// TODO: Cleanup of NscTree.h for Milestone 3
+// This will include hopefully better names for variables as well as checking the build of %windir%\System32\ExplorerFrame.dll rather than the OS version
+// 
+////
+
 DEFINE_GUID(CLSID_PersonalStartMenu, 0x3F6953F0, 0x5359, 0x47FC, 0x0BD, 0x99, 0x9F, 0x2C, 0x0B9, 0x5A, 0x62, 0x0FD);
 
 MIDL_INTERFACE("00000000-0000-0000-0000-000000000000")
@@ -59,7 +66,7 @@ static void __fastcall CNscTree_ScaleAndSetIndent(__int64 a1)
 	int v6; // [rsp+38h] [rbp+10h] BYREF
 	int extraOffset = 0;
 
-	if (g_osVersion.BuildNumber() >= 26100 || (g_osVersion.BuildNumber() >= 22621 && g_osVersion.BuildRevision() >= 4602)) // Ittr: Handle windows 11 offset difference. Inefficient but simplified code wasnt working
+	if (g_osVersion.BuildNumber() >= 26100 || (g_osVersion.BuildNumber() >= 22621 && g_osVersion.BuildRevision() >= 4111)) // Ittr: Handle windows 11 offset difference. Inefficient but simplified code wasnt working
 		extraOffset = 16;
 	else if (g_osVersion.BuildNumber() >= 21996)
 		extraOffset = 8;
@@ -74,7 +81,7 @@ static void __fastcall CNscTree_SetIndentValue(__int64 a1, int a2)
 {
 	int extraOffset = 0;
 
-	if (g_osVersion.BuildNumber() >= 26100 || (g_osVersion.BuildNumber() >= 22621 && g_osVersion.BuildRevision() >= 4602)) // Ittr: Handle windows 11 offset difference. Inefficient but simplified code wasnt working
+	if (g_osVersion.BuildNumber() >= 26100 || (g_osVersion.BuildNumber() >= 22621 && g_osVersion.BuildRevision() >= 4111)) // Ittr: Handle windows 11 offset difference. Inefficient but simplified code wasnt working
 		extraOffset = 16;
 	else if (g_osVersion.BuildNumber() >= 21996)
 		extraOffset = 8;
@@ -94,7 +101,7 @@ static void __fastcall CNscTree_ScaleAndSetRowHeight(__int64 a1)
 	int v9; // eax
 	int extraOffset = 0;
 
-	if (g_osVersion.BuildNumber() >= 26100 || (g_osVersion.BuildNumber() >= 22621 && g_osVersion.BuildRevision() >= 4602)) // Ittr: Handle windows 11 offset difference. Inefficient but simplified code wasnt working
+	if (g_osVersion.BuildNumber() >= 26100 || (g_osVersion.BuildNumber() >= 22621 && g_osVersion.BuildRevision() >= 4111)) // Ittr: Handle windows 11 offset difference. Inefficient but simplified code wasnt working
 		extraOffset = 16;
 	else if (g_osVersion.BuildNumber() >= 21996)
 		extraOffset = 8;
@@ -128,7 +135,7 @@ static __int64 __fastcall CNscTree_SetItemHeight(__int64 a1, int a2)
 {
 	int extraOffset = 0;
 
-	if (g_osVersion.BuildNumber() >= 26100 || (g_osVersion.BuildNumber() >= 22621 && g_osVersion.BuildRevision() >= 4602)) // Ittr: Handle windows 11 offset difference. Inefficient but simplified code wasnt working
+	if (g_osVersion.BuildNumber() >= 26100 || (g_osVersion.BuildNumber() >= 22621 && g_osVersion.BuildRevision() >= 4111)) // Ittr: Handle windows 11 offset difference. Inefficient but simplified code wasnt working
 		extraOffset = 16;
 	else if (g_osVersion.BuildNumber() >= 21996)
 		extraOffset = 8;
@@ -161,7 +168,7 @@ static HRESULT __fastcall CNSCHost_FillNSC(uintptr_t nscHost) //todo: reimplemen
 		IVisualProperties* visualProps = (IVisualProperties*)(__int64(control) + 0x20);
 		INameSpaceTreeControlValuesPrivate* privatec = (INameSpaceTreeControlValuesPrivate*)(__int64(control) + 0x50);
 
-		if (g_osVersion.BuildNumber() < 14393)
+		if (g_osVersion.BuildNumber() < 14393) // handle TH1 and TH2 - less explorerframe modding exists, so should be fine
 		{
 			privatec->SetIndentValue(indentValue);
 			visualProps->SetItemHeight(itemHeight);

@@ -155,7 +155,7 @@ DWORD GetColorizationColor()
 	}
 
 	// Approximate default Windows 8.1 translucency if user has regular 10/11 colours used and has not manually set to 0xC4
-	if (s_UseWin8DefaultAlpha && a == 0xC4)
+	if (a == 0xC4)
 	{
 		a = 0x74;
 	}
@@ -227,7 +227,7 @@ __forceinline WINDOWCOMPOSITIONATTRIBDATA GetTrayAccentProperties(bool isThumbna
 	// - we then define gradient color by pulling either DWM accent color or immersive color as applicable
 	// this is then passed into attribute data which we call back into whenever we need to get accent properties without retyping this whole function
 
-	if (g_osVersion.BuildNumber() >= 22621 && s_ColorizationOptions == 3) // Acrylic colorization was adjusted on 11; removing the 0x2 flag restores the old behaviour.
+	if (g_osVersion.BuildNumber() >= 22621 && s_ColorizationOptions == 3) // Acrylic colorization misbehaves on 11. Removing 0x2 flag fixes this
 	{
 		WINDOWCOMPOSITIONATTRIBDATA attrData;
 		ACCENT_POLICY accentPolicy;
@@ -442,16 +442,16 @@ void FirstRunCompatibilityWarning()
 // One-off warning for pre-release version
 void FirstRunPrereleaseWarning()
 {
+#ifdef PRERELEASE_COPY // do nothing if this isn't defined
 	DWORD value = 0;
 	RegGetDWORD(HKEY_CURRENT_USER, sz_SettingsKey, L"FirstRunPrereleaseCheck", &value);
 	if (value != 1)
 	{
-#ifdef PRERELEASE_COPY
 		MessageBoxW(NULL, L"Evaluation copy.\nFor testing purposes only.", L"explorer7", MB_ICONEXCLAMATION);
 		DWORD newValue = 1;
 		RegSetDWORD(HKEY_CURRENT_USER, sz_SettingsKey, L"FirstRunPrereleaseCheck", &newValue);
-#endif
 	}
+#endif
 }
 
 // Ittr: The following 3 functions are here rather than any specific imports header because they are used by 2 different patch types

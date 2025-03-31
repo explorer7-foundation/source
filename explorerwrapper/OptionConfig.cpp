@@ -12,7 +12,6 @@ bool s_ShowStoreAppsOnTaskbar;
 bool s_ShowStoreAppsInStart;
 int s_AcrylicAlt;
 int s_ColorizationOptions;
-bool s_UseWin8DefaultAlpha;
 bool s_OverrideAlpha;
 DWORD s_AlphaValue;
 bool s_UseDCompFlyouts;
@@ -37,6 +36,12 @@ void InitializeConfiguration()
 		// In other words, this is more efficient
 		g_registry.QueryValue(L"EnableImmersive", (LPBYTE)&dwEnableUWP, sizeof(DWORD));
 	}
+#ifndef PRERELEASE_COPY
+	if (dwEnableUWP == 2) // mode 2 is for debugging only, not release builds!
+	{
+		dwEnableUWP = 0; // change to fully disabled state as though 2 doesn't exist
+	}
+#endif
 	s_EnableImmersiveShellStack = dwEnableUWP;
 
 	// Taskbar pinning
@@ -114,11 +119,6 @@ void InitializeConfiguration()
 			s_ColorizationOptions = dwColorizationOptions;
 		}
 	}
-
-	// Win8.x default alpha value
-	DWORD dwWin8DefaultAlpha = 1;
-	g_registry.QueryValue(L"Win8DefaultAlpha", (LPBYTE)&dwWin8DefaultAlpha, sizeof(DWORD));
-	s_UseWin8DefaultAlpha = dwWin8DefaultAlpha;
 
 	// Composited colorization alpha override
 	// - Defaults to disabled (0)

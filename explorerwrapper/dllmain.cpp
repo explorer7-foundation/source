@@ -1,5 +1,4 @@
 #define INITGUID
-#define PRERELEASE_COPY
 #include "util.h"
 #include "common.h"
 #include "forwards.h"
@@ -440,6 +439,8 @@ void HookImmersive()
 	ChangeImportedAddress(immersiveui, "user32.dll", GetUserObjectInformation, GetUserObjectInformationNew);
 	ChangeImportedAddress(immersiveui, "user32.dll", SetTimer, SetTimer_WUI);
 
+	//ChangeImportedAddress(GetModuleHandle(L"twinui.dll"), "ntdll.dll", RtlIsMultiSessionSku, )
+
 	if (!s_EnableImmersiveShellStack || g_osVersion.BuildNumber() < 10074) // Ittr: If user *either* has UWP disabled, or they are NOT on Windows 10, run legacy window band code
 	{
 		//bugbug!!!
@@ -563,10 +564,10 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 		if (GetFileAttributesW((LPCWSTR)blacklistPath) != INVALID_FILE_ATTRIBUTES) // Windowblinds blockage part 1 - create user-facing error
 			CrashError(); // The user-facing crash message - we do these blocks of code like this, so that the 0xc0000142 error doesn't appear
 
-		if (g_osVersion.BuildNumber() >= 26100)
+		/*if (g_osVersion.BuildNumber() >= 26100)
 		{
 			InitPinnedListHack();
-		}
+		}*/
 
 		CreateShellFolder(); // Fix shell folder for 1607+...
 		EnsureWindowColorization(); // Correct colorization enablement setting for Win10/11
@@ -721,19 +722,19 @@ extern "C" HRESULT WINAPI Explorer_CoCreateInstance(
 			id = IID_IPinnedList3;
 		}
 
-		if (rclsid == CLSID_TaskbarPin && CTaskbandPin_CreateInstance && build >= 26100) // Windows 11...
-		{
-			CTaskbandPin_W32PTP* pTaskbandPin;
-			result = CTaskbandPin_CreateInstance(&pTaskbandPin);
-			dbgprintf(L"CTaskbandPin_CreateInstance result: %p", result);
-			if (SUCCEEDED(result))
-			{
-				result = ((IUnknown*)pTaskbandPin)->QueryInterface(id, ppv);
-				dbgprintf(L"CTaskbandPin_CreateInstance result 2: %p", result);
-				((IUnknown*)pTaskbandPin)->Release();
-			}
-		}
-		else
+		//if (rclsid == CLSID_TaskbarPin && CTaskbandPin_CreateInstance && build >= 26100) // Windows 11...
+		//{
+		//	CTaskbandPin_W32PTP* pTaskbandPin;
+		//	result = CTaskbandPin_CreateInstance(&pTaskbandPin);
+		//	dbgprintf(L"CTaskbandPin_CreateInstance result: %p", result);
+		//	if (SUCCEEDED(result))
+		//	{
+		//		result = ((IUnknown*)pTaskbandPin)->QueryInterface(id, ppv);
+		//		dbgprintf(L"CTaskbandPin_CreateInstance result 2: %p", result);
+		//		((IUnknown*)pTaskbandPin)->Release();
+		//	}
+		//}
+		//else
 		{
 			result = CoCreateInstance(rclsid, pUnkOuter, dwClsContext, id, ppv);
 		}

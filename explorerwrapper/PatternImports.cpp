@@ -554,6 +554,48 @@ void FixWin11SearchIcon()
 	}
 }
 
+void DisableWinXMenu()
+{
+	// Ittr: This only applies to Windows 10. The menu is no longer part of the immersive shell starting with Windows 11 21H2.
+
+	char* ShowLauncherTipContextMenu; // CImmersiveHotkeyNotification::_ShowLauncherTipContextMenu
+	char* SLTCMPattern;
+	unsigned char bytes[] = { 0xB0, 0x01, 0xC3 };
+
+	HMODULE twinui = LoadLibrary(L"twinui.dll");
+
+	if (twinui)
+	{
+		ShowLauncherTipContextMenu = "48 89 5C 24 08 57 48 83 EC 20 48 83 64 24 40 00 48 8B D9 48 8D ?? ?? ?? E8 ?? ?? ?? ?? 45 33 C0"; 
+		SLTCMPattern = (char*)FindPattern((uintptr_t)twinui, ShowLauncherTipContextMenu);
+
+		if (SLTCMPattern) // first run, TH1 to TH2
+		{
+			ChangeImportedPattern(SLTCMPattern, bytes, sizeof(bytes));
+		}
+		else
+		{
+			ShowLauncherTipContextMenu = "40 53 48 83 EC 20 48 83 64 24 40 00 48 8B D9 48 8D ?? ?? ?? E8 ?? ?? ?? ?? 45 33 C0";
+			SLTCMPattern = (char*)FindPattern((uintptr_t)twinui, ShowLauncherTipContextMenu);
+
+			if (SLTCMPattern) // second run, RS1 to RS5
+			{
+				ChangeImportedPattern(SLTCMPattern, bytes, sizeof(bytes));
+			}
+			else
+			{
+				ShowLauncherTipContextMenu = "40 53 48 83 EC 30 48 C7 44 24 20 FE FF FF FF 48 8B D9 48 83 64 24 50 00 48 8D ?? ?? ?? E8 ?? ?? ?? ?? 45 33 C0";
+				SLTCMPattern = (char*)FindPattern((uintptr_t)twinui, ShowLauncherTipContextMenu);
+
+				if (SLTCMPattern) // third run, 19H1 to VB
+				{
+					ChangeImportedPattern(SLTCMPattern, bytes, sizeof(bytes));
+				}
+			}
+		}
+	}
+}
+
 // Currently ineffective, TBD review if needed
 void EnablePinning()
 {
@@ -650,6 +692,7 @@ void ChangePatternImports()
 	DisableWin11AltTab(); // Disable XAML UI because it crashes
 	DisableWin11HardwareConfirmators(); // Disable XAML UI because it crashes
 	FixWin11SearchIcon(); // Prevents search icon from being mangled by a buggy tablet mode implementation (cheers Microsoft)
+	DisableWinXMenu(); // Remove Windows 10 Win+X menu functionality for UWP mode
 
 	// For 24H2 onwards so we can pin to taskbar as system shell
 	//EnablePinning();

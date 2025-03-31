@@ -347,3 +347,4 @@ LPTHREAD_START_ROUTINE CTray__SyncThreadProc_orig = nullptr;
 // prevent windows 11 hotkey registration
 typedef BOOL(WINAPI* ShellRegisterHotKey_t)(HWND, int, UINT, UINT, HWND);
 static ShellRegisterHotKey_t ShellRegisterHotKey;
+

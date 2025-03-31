@@ -15,7 +15,7 @@ explorer7 is a **wrapper library** that allows Windows 7's explorer.exe to run p
 
 </details>
 
-## Known issues (Milestone 2, last updated 2025-02-07)
+## Known issues (Milestone 2, last updated 2025-03-31)
 These issues, unless specified to have been resolved in a later Windows version, are persistent across subsequent versions of Windows from their introduction.
 
 **MAKE SURE YOU READ THESE FIRST SO YOU ARE AWARE OF WHAT YOU ARE GETTING INTO!**
@@ -28,14 +28,14 @@ These issues, unless specified to have been resolved in a later Windows version,
 - Autoplay does not work (1507+).
 - When ColorizationOptions is set to 0, system msstyles with the name "aero.msstyles" will screw up the start menu and taskbar colorization (1809+).
 - "Notification Area Icon" settings in Control Panel are missing (1507+).
-- The start menu cannot be correctly invoked from its relevant hotkey whilst immersive shell is enabled (1507+).
+- The start menu cannot be correctly invoked from its relevant hotkeys whilst immersive shell is enabled (1507+).
 - The taskbar might overlap fullscreen applications whilst immersive shell is enabled (1507+).
 - If a user has StartIsBack++ installed, it may attempt to erroneously hook the shell, causing both visual and functional issues.
 - "Settings" is duplicated in the start menu program list (1607-22H2, fixed system-wide in Windows 11).
 
 **Windows 11**
 - BlurBehind colorization mode no longer works due to the removal of the relevant accent policy (22H2+).
-- Taskbar and start menu pin creation is broken due to an internal shell32.dll code logic change (24H2+).
+- Taskbar and start menu pin creation is broken due to an internal shell32.dll code logic change (24H2+, 23H2 January 2025 Update+).
 - Immersive shell support does not function correctly, and cannot launch applications (Insider 25H2+).
 
 **Windows 7 limitations/bugs**
@@ -148,7 +148,6 @@ These options are located under `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\Cu
 | OverrideAlpha | REG_DWORD | When set to 1, colorization alpha specified by DWM is overridden on the taskbar, start menu, and thumbnails. | **0** |
 | AlphaValue | REG_DWORD | For use alongside OverrideAlpha, to specify a 2-digit hex code for the colorization system to use. | **0x6B** |
 | UseTaskbarPinning | REG_DWORD | Determines whether taskbar pinning functionality is available to the user. When set to 0, pins will not be loaded and cannot be modified from jumplists. | **1** |
-| Win8DefaultAlpha | REG_DWORD | When set to 1, the colorization system attempts to approximate default Windows 8-era alpha values, rather than using the alpha value defined by default for Windows 10 and 11. <br> <br> This value is deprecated and will be removed in a future release. | **1** |
 
 ## Theme support
 
@@ -239,9 +238,9 @@ We're working based on a series of development milestones. Here's the planned de
 
 |   Stage   | Goal | Status |
 | -------- | --------- | ------ |
-| Milestone 1 | Initial release focused on stability for Windows 8.1, and providing a starting point for Windows 10 support. | ✅ Completed |
-| Milestone 2 | - Achieving stability for Windows 10 and 11 (up to and including 23H2) <br> - Ensuring that behaviour on Windows 8.1 perfectly matches its predecessor. <br> - Providing more visually accurate interfaces (e.g. program list) <br> - Supporting older .msstyles <br> - Introducing immersive shell support <br> - Custom orb support | ⏳ Work in progress |
-| Milestone 3 | Solving persistent bugs remaining on Windows 10 and 11. Likely to focus more on fixes and adjustments than new features. | ⛔ Not in active development |
+| Milestone 1 | Initial release focused on stability for Windows 8.1, and providing a starting point for Windows 10 support. |  |
+| Milestone 2 | - Achieving stability for Windows 10 and 11 (up to and including 23H2) <br> - Ensuring that behaviour on Windows 8.1 perfectly matches its predecessor. <br> - Providing more visually accurate interfaces (e.g. program list) <br> - Supporting older .msstyles <br> - Introducing immersive shell support <br> - Custom orb support | ✅ Completed |
+| Milestone 3 | Solving persistent bugs remaining on Windows 10 and 11. Likely to focus more on fixes and adjustments than new features. | ⏳ Work in progress |
 
 While this project is aimed at restoring Windows 7 explorer.exe functionality, some older explorer versions have been found to work with the wrapper. In the future, we plan to support some of these directly.  Here's the chart
 for support:
@@ -261,3 +260,7 @@ If you're having linker errors because of the prebuilt minhook, do the following
 
 Contributors: DON'T COMMIT YOUR MODIFIED `libMinHook.x64.lib` UNLESS SPECIFIED!
 
+## Licensing
+The code for the project is licensed under GPLv3, to allow both for further research and for power-users to be able to make their own modifications. However, in the public interest, for the safety of users and developers alike, inclusion of compiled explorer7 DLL files in any form (whether compiled from source, forks of the source code, or from the release repository) in modified Windows ISOs, or "transformation packs", is strictly prohibited. 
+
+We reserve every right to act against unauthorised usage of the software, as outlined above.

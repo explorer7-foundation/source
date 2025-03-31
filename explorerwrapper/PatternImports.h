@@ -21,6 +21,7 @@ void RestoreWin32Menus();
 void DisableWin11AltTab();
 void DisableWin11HardwareConfirmators();
 void FixWin11SearchIcon();
+void DisableWinXMenu();
 
 // Enable taskbar pins on 24H2 and later
 void EnablePinning();
