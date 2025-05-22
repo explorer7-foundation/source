@@ -3,7 +3,6 @@
 // Remove AMAP class from loaded msstyle so that Vista and 7 msstyles are compatible
 void RemoveLoadAnimationDataMap()
 {
-	// 48 8B 53 20 48 8B ?? E8 ?? ?? ?? ?? 8B ?? 48 8B ?? E8 ?? ?? ?? ?? 8B ?? EB 05 B8 57 00 07 80
 	// thank you amrsatrio for the pattern + offsetting method
 	char* LoadAnimationDataMap = "48 8B 53 20 48 8B ?? E8 ?? ?? ?? ?? 8B ?? 48 8B";
 
@@ -61,7 +60,6 @@ void FixAuthUI()
 	char* pattern = (char*)FindPattern((uintptr_t)GetModuleHandle(NULL), bytes);
 	char* pattern1 = (char*)FindPattern((uintptr_t)GetModuleHandle(NULL), bytesOld);
 
-	DWORD old;
 	unsigned char patch1[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
 	SIZE_T size = sizeof(patch1);
 	if (pattern)
@@ -346,7 +344,7 @@ void DisableTaskView()
 					TaskViewHostShow = "48 89 5C 24 20 56 57 41 54 41 55 41 57 48 81 EC";
 					TVHSPattern = (char*)FindPattern((uintptr_t)twinui_pcshell, TaskViewHostShow);
 
-					if (TVHSPattern) // 2004
+					if (TVHSPattern) // VB
 					{
 						ChangeImportedPattern(TVHSPattern, bytes, sizeof(bytes));
 					}
@@ -398,7 +396,7 @@ DisableTaskView_TWINUI:
 					TaskViewHostShow = "48 89 5C 24 20 55 56 57 41 54 41 55 41 56 41 57 ?? ?? ?? ?? ?? ?? ?? ?? 48 81 EC E0 01 00 00";
 					TVHSPattern = (char*)FindPattern((uintptr_t)twinui, TaskViewHostShow);
 
-					if (TVHSPattern) // TH2 to RS1
+					if (TVHSPattern) // TH1
 					{
 						ChangeImportedPattern(TVHSPattern, bytes, sizeof(bytes));
 					}
@@ -557,7 +555,6 @@ void FixWin11SearchIcon()
 void DisableWinXMenu()
 {
 	// Ittr: This only applies to Windows 10. The menu is no longer part of the immersive shell starting with Windows 11 21H2.
-
 	char* ShowLauncherTipContextMenu; // CImmersiveHotkeyNotification::_ShowLauncherTipContextMenu
 	char* SLTCMPattern;
 	unsigned char bytes[] = { 0xB0, 0x01, 0xC3 };
@@ -592,24 +589,6 @@ void DisableWinXMenu()
 					ChangeImportedPattern(SLTCMPattern, bytes, sizeof(bytes));
 				}
 			}
-		}
-	}
-}
-
-// Currently ineffective, TBD review if needed
-void EnablePinning()
-{
-	char* IsTrustedWindowsPinProcess = "48 89 5C 24 18 55 56 57 48 8B EC 48 83 EC 70 48 8B 05 6E 8E";
-
-	HMODULE TPS = LoadLibrary(L"twinui.pcshell.dll");
-	if (TPS)
-	{
-		char* ITWPPPattern = (char*)FindPattern((uintptr_t)TPS, IsTrustedWindowsPinProcess);
-
-		if (ITWPPPattern)
-		{
-			unsigned char bytes[] = { 0xB0, 0x01, 0xC3 };
-			ChangeImportedPattern(ITWPPPattern, bytes, sizeof(bytes));
 		}
 	}
 }
@@ -661,7 +640,7 @@ void RevertFlyouts()
 
 					LSVPattern = (char*)FindPattern((uintptr_t)SVS, LaunchSndVol);
 
-					if (LSVPattern) // second run, TH1 to TI
+					if (LSVPattern) // second run, TH1 to 19H1
 					{
 						unsigned char bytes[] = { 0x0F, 0xB7, 0x44, 0x24, 0x50, 0x66, 0x83, 0xF8, 0x66, 0xEB };
 						ChangeImportedPattern(LSVPattern, bytes, sizeof(bytes));
@@ -693,9 +672,6 @@ void ChangePatternImports()
 	DisableWin11HardwareConfirmators(); // Disable XAML UI because it crashes
 	FixWin11SearchIcon(); // Prevents search icon from being mangled by a buggy tablet mode implementation (cheers Microsoft)
 	DisableWinXMenu(); // Remove Windows 10 Win+X menu functionality for UWP mode
-
-	// For 24H2 onwards so we can pin to taskbar as system shell
-	//EnablePinning();
 
 	// Fix context menus for executable files starting in Windows 11 to prevent explorer from freezing
 	FixWin11ContextMenu();

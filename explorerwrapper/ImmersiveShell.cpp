@@ -1,3 +1,7 @@
+#pragma warning(disable:4302) // type conversions used by Windows 8.1 immersive code
+#pragma warning(disable:4311) // type conversions used by Windows 8.1 immersive code
+#pragma warning(disable:4312) // type conversions used by Windows 8.1 immersive code
+
 #include "ImmersiveShell.h"
 #include "dbgprint.h"
 

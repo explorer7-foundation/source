@@ -1,4 +1,11 @@
 #define INITGUID
+
+#pragma warning(disable:4302)
+#pragma warning(disable:4309)
+#pragma warning(disable:4311)
+#pragma warning(disable:4312)
+#pragma warning(disable:4700) // this one in particular because it fires erroneously
+
 #include "util.h"
 #include "common.h"
 #include "forwards.h"
@@ -281,72 +288,6 @@ void ModifyDesktopHwnd()
 	}
 }
 
-enum BlockHotKeyRegistrationFlags : __int32
-{
-	BHKRF_None = 0x0,
-	BHKRF_Always = 0x1,
-	BHKRF_PpiEdition = 0x2,
-	BHKRF_AssignedAccessMultiAppMode = 0x4,
-	BHKRF_ShellLauncher = 0x8,
-};
-
-const struct IMMERSIVE_WINDOW_MESSAGE_SERVICE_HOTKEY_REGISTRATION
-{
-	BlockHotKeyRegistrationFlags blockFlags;
-	int id;
-	unsigned int fsModifiers;
-	unsigned int vk;
-};
-
-// experimental hotkey fix 1 - broke uwp
-HRESULT(__fastcall* CImmersiveWindowMessageService__RequestHotkeys)(void* a1, unsigned int a2, IMMERSIVE_WINDOW_MESSAGE_SERVICE_HOTKEY_REGISTRATION* a3, void* a4, unsigned int* a5);
-HRESULT CImmersiveWindowMessageService__RequestHotkeys_Hook(void* a1, unsigned int a2, IMMERSIVE_WINDOW_MESSAGE_SERVICE_HOTKEY_REGISTRATION* a3, void* a4, unsigned int* a5)
-{
-	dbgprintf(L"CImmersiveWindowMessageService__RequestHotkeys");
-	if (a3->vk == VK_LWIN || a3->vk == VK_RWIN || (a3->vk == VK_ESCAPE && a3->fsModifiers & VK_CONTROL)) // fix win key
-	{
-		dbgprintf(L"FIXING WINDOWS KEY");
-		return S_OK;
-	}
-
-	return CImmersiveWindowMessageService__RequestHotkeys(a1,a2,a3,a4,a5);
-}
-
-// experimental hotkey fix 2 - doesn't work at present
-UINT shellHook = 0;
-
-UINT(WINAPI* fRegisterWindowMessageW)(LPCWSTR lpString);
-UINT WINAPI RegisterWindowMessageWNEW(LPCWSTR lpString)
-{
-	dbgprintf(L"RegisterWindowMessageWNEW %s",lpString);
-	if (wcscmp(L"SHELLHOOK", lpString) == 0)
-	{
-		dbgprintf(L"RegisterWindowMessageWNEW REDIRD");
-
-		if (shellHook != 0)
-			return shellHook;
-
-		shellHook = fRegisterWindowMessageW(L"SHELLHOOK");
-		return shellHook;
-	}
-	return fRegisterWindowMessageW(lpString);
-}
-
-// experimental hotkey fix 3 - buggy results but *does* appear to work
-HRESULT(__fastcall* CTaskBand_HandleShellHook)(PVOID ctaskband, int id, HWND a3);
-
-HRESULT(__fastcall* OnShellHookMessage)(void* a1);
-HRESULT OnShellHookMessage_Hook(void* a1) //gets called when start menu is to be opened - a bit temperamental
-{
-	// key to note: at the moment, we can either do this for bugged start menu behaviour, or we can return S_OK and have no menu on the hotkey at all.
-	// neither is ideal, but we can probably ship m2 like this and fix properly later
-
-	if (CTaskBandPtr)
-		return CTaskBand_HandleShellHook(CTaskBandPtr,7,0);
-
-	return OnShellHookMessage(a1);
-}
-
 void HookShell32();
 void HookAPIs() // largely a legacy function now
 {
@@ -373,18 +314,6 @@ void HookAPIs() // largely a legacy function now
 
 	// We run the Minhook patches here
 	ChangeMinhookImports();
-
-	//CImmersiveWindowMessageService__RequestHotkeys = (decltype(CImmersiveWindowMessageService__RequestHotkeys))FindPattern((uintptr_t)LoadLibrary(L"twinui.dll"), "4C 8B DC 4D 89 43 ?? 57 41 54 41 55 41 56 41 57 48 83 EC");
-	//MH_CreateHook(static_cast<LPVOID>(CImmersiveWindowMessageService__RequestHotkeys), CImmersiveWindowMessageService__RequestHotkeys_Hook, reinterpret_cast<LPVOID*>(&CImmersiveWindowMessageService__RequestHotkeys));
-
-	//fRegisterWindowMessageW = (decltype(fRegisterWindowMessageW))GetProcAddress(LoadLibraryW(L"user32.dll"),"RegisterWindowMessageW");
-
-	// disabled - <1607 doesnt like atm + unfinished. sorry! uncomment if you're testing
-	//CTaskBand_HandleShellHook = (decltype(CTaskBand_HandleShellHook))FindPattern((uintptr_t)GetModuleHandle(0), "48 89 5C 24 08 55 56 57 41 54 41 55 48 83 EC ?? 83 FA 07");
-	//OnShellHookMessage = (decltype(OnShellHookMessage))FindPattern((uintptr_t)LoadLibraryW(L"twinui.pcshell.dll"), "40 53 48 83 EC 20 48 8B D9 48 8B 89 ?? ?? ?? ?? 48 85 C9 74 ?? 48 8B 01 48 8B 40 ?? FF 15 ?? ?? ?? ?? 84 C0 0F 85 ?? ?? ?? ?? 38 83");
-
-	// disabled - <1607 doesnt like atm + unfinished. sorry! uncomment if you're testing
-	//MH_CreateHook(static_cast<LPVOID>(OnShellHookMessage), OnShellHookMessage_Hook, reinterpret_cast<LPVOID*>(&OnShellHookMessage));
 
 	// Prevent theme overrides applying to file explorer *VERY IMPORTANT*
 	HookTrayThread();
@@ -439,8 +368,6 @@ void HookImmersive()
 	ChangeImportedAddress(immersiveui, "user32.dll", GetUserObjectInformation, GetUserObjectInformationNew);
 	ChangeImportedAddress(immersiveui, "user32.dll", SetTimer, SetTimer_WUI);
 
-	//ChangeImportedAddress(GetModuleHandle(L"twinui.dll"), "ntdll.dll", RtlIsMultiSessionSku, )
-
 	if (!s_EnableImmersiveShellStack || g_osVersion.BuildNumber() < 10074) // Ittr: If user *either* has UWP disabled, or they are NOT on Windows 10, run legacy window band code
 	{
 		//bugbug!!!
@@ -472,7 +399,7 @@ void ExitExplorerSilently()
 {
 	// we do these blocks of code like this, so that the 0xc0000142 error doesn't appear
 	LPDWORD exitCode;
-	GetExitCodeProcess(L"explorer.exe", exitCode);
+	GetExitCodeProcess(L"explorer.exe", exitCode); // compiler warning is wrong here - the variable is supplied the exit code by this function
 	ExitProcess((UINT)exitCode); // exit explorer
 }
 
@@ -521,7 +448,6 @@ void InitPinnedListHack()
 		{
 			matchCTaskbandPinCreateInstance += 21;
 			matchCTaskbandPinCreateInstance += 5 + *(int*)(matchCTaskbandPinCreateInstance + 1);
-
 		}
 
 		if (!matchCTaskbandPinCreateInstance)

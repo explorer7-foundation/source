@@ -15,7 +15,7 @@ explorer7 is a **wrapper library** that allows Windows 7's explorer.exe to run p
 
 </details>
 
-## Known issues (Milestone 2, last updated 2025-03-31)
+## Known issues (Milestone 2 Update, last modified 2025-04-21)
 These issues, unless specified to have been resolved in a later Windows version, are persistent across subsequent versions of Windows from their introduction.
 
 **MAKE SURE YOU READ THESE FIRST SO YOU ARE AWARE OF WHAT YOU ARE GETTING INTO!**
@@ -28,7 +28,6 @@ These issues, unless specified to have been resolved in a later Windows version,
 - Autoplay does not work (1507+).
 - When ColorizationOptions is set to 0, system msstyles with the name "aero.msstyles" will screw up the start menu and taskbar colorization (1809+).
 - "Notification Area Icon" settings in Control Panel are missing (1507+).
-- The start menu cannot be correctly invoked from its relevant hotkeys whilst immersive shell is enabled (1507+).
 - The taskbar might overlap fullscreen applications whilst immersive shell is enabled (1507+).
 - If a user has StartIsBack++ installed, it may attempt to erroneously hook the shell, causing both visual and functional issues.
 - "Settings" is duplicated in the start menu program list (1607-22H2, fixed system-wide in Windows 11).

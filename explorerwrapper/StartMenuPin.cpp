@@ -1,3 +1,5 @@
+#pragma warning(disable:4244) // type conversion used for getting help text
+
 #include "StartMenuPin.h"
 #include "dbgprint.h"
 #include "OSVersion.h"
