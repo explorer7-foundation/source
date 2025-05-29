@@ -293,11 +293,27 @@ void SetProgramListNscTreeAttributes()
 
 void HandleThumbnailColorization()
 {
+	// CTaskListThumbnailWnd::_Render
 	// Thumbnail rendering fix for colorization modes
 	if (g_osVersion.BuildNumber() >= 10074) // we don't apply to 8.1 as only pseudo-aero is supported there
 	{
-		void* _thumbnailrender = (void*)FindPattern((uintptr_t)GetModuleHandle(0), "48 8B C4 48 89 58 08 48 89 68 10 48 89 70 20 44 89 40 18 57 41 54 41 55 41 56 41 57 48 81 EC 90 00 00 00 48 8B F9");
-		MH_CreateHook(static_cast<LPVOID>(_thumbnailrender), RenderThumbnail, reinterpret_cast<LPVOID*>(&renderThumbnail_orig));
+		char* CTaskListThumbnailWnd_Render = "48 8B C4 48 89 58 08 48 89 68 10 48 89 70 20 44 89 40 18 57 41 54 41 55 41 56 41 57 48 81 EC 90 00 00 00 48 8B F9";
+		void* CTLWRPattern = (void*)FindPattern((uintptr_t)GetModuleHandle(NULL), CTaskListThumbnailWnd_Render);
+
+		if (CTLWRPattern)
+		{
+			MH_CreateHook(static_cast<LPVOID>(CTLWRPattern), RenderThumbnail, reinterpret_cast<LPVOID*>(&renderThumbnail_orig));
+		}
+		else // 7779 and 7785
+		{
+			CTaskListThumbnailWnd_Render = "48 89 5C 24 18 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 D9 48 81 EC A0 00 00 00 48 8B 05 ?? ?? 04 00 48 33 C4";
+			CTLWRPattern = (void*)FindPattern((uintptr_t)GetModuleHandle(NULL), CTaskListThumbnailWnd_Render);
+
+			if (CTLWRPattern)
+			{
+				MH_CreateHook(static_cast<LPVOID>(CTLWRPattern), RenderThumbnail, reinterpret_cast<LPVOID*>(&renderThumbnail_orig));
+			}
+		}
 	}
 }
 
@@ -305,12 +321,62 @@ void RenderStoreAppsOnTaskbar()
 {
 	if (s_ShowStoreAppsOnTaskbar && g_osVersion.BuildNumber() >= 10074)
 	{
-		void* _ctaskbandadd = (void*)FindPattern((uintptr_t)GetModuleHandle(0), "FF F3 55 56 57 41 54 41 55 41 56 41 57 48 81 EC F8 06 00 00");
-		void* _cthumbnailUpdate = (void*)FindPattern((uintptr_t)GetModuleHandle(0), "48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 48 83 EC 30 48 8B 81 B0 00 00 00");
-		SetIconThumb = (setIconThumb_t)FindPattern((uintptr_t)GetModuleHandle(0), "48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 20 49 63 D8 4C 8B 81 B0 00 00 00");
+		// Part 1: CTaskListThumbnailWnd::_SetIcon
+		// Must be defined so that it can be called by our hook functions
+		// However, we only assign the definition if we can actually detect it to begin with
+		char* CTaskListThumbnailWnd_SetIcon = "48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 20 49 63 D8 4C 8B 81 B0 00 00 00";
+		setIconThumb_t CTLTWSIPattern = (setIconThumb_t)FindPattern((uintptr_t)GetModuleHandle(NULL), CTaskListThumbnailWnd_SetIcon);
 
-		MH_CreateHook(static_cast<LPVOID>(_ctaskbandadd), SetWindowIcon, reinterpret_cast<LPVOID*>(&SetIcon));
-		MH_CreateHook(static_cast<LPVOID>(_cthumbnailUpdate), UpdateItemIcon, reinterpret_cast<LPVOID*>(&UpdateItem));
+		if (CTLTWSIPattern)
+		{
+			SetIconThumb = CTLTWSIPattern;
+		}
+		else // 7779 and 7785
+		{
+			CTaskListThumbnailWnd_SetIcon = "48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 20 48 8B 81 B0 00 00 00 49 63 D8";
+			CTLTWSIPattern = (setIconThumb_t)FindPattern((uintptr_t)GetModuleHandle(NULL), CTaskListThumbnailWnd_SetIcon);
+
+			if (CTLTWSIPattern)
+			{
+				SetIconThumb = CTLTWSIPattern;
+			}
+			else
+			{
+				// In this case if we are unable to find the definition, return here so the function doesn't apply the hooks
+				// This prevents stability issues if we are unable to define this properly
+				return;
+			}
+		}
+
+		// Part 2: CTaskBand::_SetWindowIcon 
+		// Must be hooked accordingly so the icon can be overridden as necessary for the TaskItem buttons
+		char* CTaskBand_SetWindowIcon = "FF F3 55 56 57 41 54 41 55 41 56 41 57 48 81 EC F8 06 00 00";
+		void* CTBSWIPattern = (void*)FindPattern((uintptr_t)GetModuleHandle(NULL), CTaskBand_SetWindowIcon);
+
+		if (CTBSWIPattern)
+		{
+			MH_CreateHook(static_cast<LPVOID>(CTBSWIPattern), SetWindowIcon, reinterpret_cast<LPVOID*>(&SetIcon));
+		}
+		else // 7779 and 7785
+		{
+			CTaskBand_SetWindowIcon = "4C 8B DC 49 89 5B 08 49 89 73 10 49 89 7B 18 4D 89 63 20 55 48 8B EC";
+			CTBSWIPattern = (void*)FindPattern((uintptr_t)GetModuleHandle(NULL), CTaskBand_SetWindowIcon);
+
+			if (CTBSWIPattern)
+			{
+				MH_CreateHook(static_cast<LPVOID>(CTBSWIPattern), SetWindowIcon, reinterpret_cast<LPVOID*>(&SetIcon));
+			}
+		}
+
+		// Part 3: CTaskListThumbnailWnd::_UpdateItemIcon
+		// Hooking this function will allow the thumbnail icon to be updated as applicable
+		char* CTaskListThumbnailWnd_UpdateItemIcon = "48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 48 83 EC 30 48 8B 81 B0 00 00 00";
+		void* CTLTWUIIPattern = (void*)FindPattern((uintptr_t)GetModuleHandle(NULL), CTaskListThumbnailWnd_UpdateItemIcon);
+
+		if (CTLTWUIIPattern)
+		{
+			MH_CreateHook(static_cast<LPVOID>(CTLTWUIIPattern), UpdateItemIcon, reinterpret_cast<LPVOID*>(&UpdateItem));
+		}
 	}
 }
 
@@ -334,7 +400,7 @@ void CreateImmersiveShell()
 		MH_CreateHook(static_cast<LPVOID>(CreateWindowInBandOrig), CreateWindowInBandNew, reinterpret_cast<LPVOID*>(&CreateWindowInBandOrig));
 		MH_CreateHook(static_cast<LPVOID>(CreateWindowInBandExOrig), CreateWindowInBandExNew, reinterpret_cast<LPVOID*>(&CreateWindowInBandExOrig));
 		MH_CreateHook(static_cast<LPVOID>(SetWindowBandApiOrg), SetWindowBandNew, reinterpret_cast<LPVOID*>(&SetWindowBandApiOrg));
-		//MH_CreateHook(static_cast<LPVOID>(RegisterHotKeyApiOrg), RegisterWindowHotkeyNew, reinterpret_cast<LPVOID*>(&RegisterHotKeyApiOrg));
+		MH_CreateHook(static_cast<LPVOID>(RegisterHotKeyApiOrg), RegisterWindowHotkeyNew, reinterpret_cast<LPVOID*>(&RegisterHotKeyApiOrg));
 
 		MH_CreateHook(GetProcAddress(GetModuleHandle(L"user32.dll"), (LPCSTR)2581), RetTrue, NULL); // GetWindowTrackInfoAsync
 		MH_CreateHook(GetProcAddress(GetModuleHandle(L"user32.dll"), (LPCSTR)2563), RetTrue, NULL); // ClearForeground

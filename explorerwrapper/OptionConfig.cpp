@@ -29,7 +29,7 @@ void InitializeConfiguration()
 	// - Defaults to disabled (0)
 	// - Pending stability improvements before default enablement
 	DWORD dwEnableUWP = 0;
-	if (g_osVersion.BuildNumber() >= 10074)
+	if (g_osVersion.BuildNumber() >= 10074 && g_osVersion.BuildNumber() < 27686) // Note: Immersive is currently buggy in 27686 and later
 	{
 		// Immersive shell can only be enabled on TH1 onwards
 		// Consolidate the check to here so we don't have to do double comparisons elsewhere in the software
@@ -90,33 +90,44 @@ void InitializeConfiguration()
 		SetThemeAppProperties(NULL);
 	}
 
-	// Composited colorization options
-	// - In this case we default to Translucent (1)
-	// - This is because it is the only mode that works on every supported OS
-	DWORD dwColorizationOptions = 1;
-	g_registry.QueryValue(L"ColorizationOptions", (LPBYTE)&dwColorizationOptions, sizeof(DWORD));
-	if (dwColorizationOptions != 0 && dwColorizationOptions < 5)
+	// Colorization configuration
+	// - Check first if aero is supported - if it is, we use Windows 7's original colorization
+	// - Otherwise, we use composited colorization option set...
+	if (g_osVersion.BuildNumber() >= 27858) 
 	{
-		// Some notes on the selection statement:
-		// - BlurBehind is broken from Nickel onwards, Acrylic is used instead as an alternative blur
-		// - Acrylic is not supported by Win32 API until RS4, so falls back to Translucent
-		// - BlurBehind, Acrylic, SolidColor are unsupported on 8.x, so falls back to Translucent
-		// - Otherwise, we apply the inputted value as the mode is supported on the OS
-		if (dwColorizationOptions == 2 && g_osVersion.BuildNumber() >= 22621)
+		// Note: Non-acrylic effects are broken in latest Canary builds, so prevent usage
+		s_ColorizationOptions = 3;
+	}
+	else
+	{
+		// Composited colorization options
+		// - In this case we default to Translucent (1)
+		// - This is because it is the only mode that works on every supported OS
+		DWORD dwColorizationOptions = 1;
+		g_registry.QueryValue(L"ColorizationOptions", (LPBYTE)&dwColorizationOptions, sizeof(DWORD));
+		if (dwColorizationOptions != 0 && dwColorizationOptions < 6)
 		{
-			s_ColorizationOptions = 3;
-		}
-		else if (dwColorizationOptions == 3 && g_osVersion.BuildNumber() < 17134)
-		{
-			s_ColorizationOptions = 1;
-		}
-		else if (dwColorizationOptions >= 2 && g_osVersion.BuildNumber() < 10074)
-		{
-			s_ColorizationOptions = 1;
-		}
-		else
-		{
-			s_ColorizationOptions = dwColorizationOptions;
+			// Some notes on the selection statement:
+			// - BlurBehind is broken from Nickel onwards, Acrylic is used instead as an alternative blur
+			// - Acrylic is not supported by Win32 API until RS4, so falls back to Translucent
+			// - BlurBehind, Acrylic, SolidColor are unsupported on 8.x, so falls back to Translucent
+			// - Otherwise, we apply the inputted value as the mode is supported on the OS
+			if (dwColorizationOptions == 2 && g_osVersion.BuildNumber() >= 22621)
+			{
+				s_ColorizationOptions = 3;
+			}
+			else if (dwColorizationOptions == 3 && g_osVersion.BuildNumber() < 17134)
+			{
+				s_ColorizationOptions = 1;
+			}
+			else if (dwColorizationOptions >= 2 && g_osVersion.BuildNumber() < 10074)
+			{
+				s_ColorizationOptions = 1;
+			}
+			else
+			{
+				s_ColorizationOptions = dwColorizationOptions;
+			}
 		}
 	}
 

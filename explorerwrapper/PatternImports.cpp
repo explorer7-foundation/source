@@ -496,6 +496,7 @@ void DisableWin11AltTab()
 	}
 }
 
+// Disable the hardware confirmators on Windows 11 (volume, brightness) due to instability
 void DisableWin11HardwareConfirmators()
 {
 	// Ittr: In simple terms, we disable them because they're unstable and crash-prone
@@ -517,6 +518,7 @@ void DisableWin11HardwareConfirmators()
 	}
 }
 
+// Correct the visual issues with the search iconography on Windows 11
 void FixWin11SearchIcon()
 {
 	// Ittr: An accidental change that actually works. Not complaining at all
@@ -552,6 +554,7 @@ void FixWin11SearchIcon()
 	}
 }
 
+// Disable the hotkey for Win+X menu which is not meant to be enabled at present
 void DisableWinXMenu()
 {
 	// Ittr: This only applies to Windows 10. The menu is no longer part of the immersive shell starting with Windows 11 21H2.
@@ -593,6 +596,7 @@ void DisableWinXMenu()
 	}
 }
 
+// Fix context menus causing crashing on Windows 11 when they are from an executable or an associated executable shortcut
 void FixWin11ContextMenu()
 {
 	if (g_osVersion.BuildNumber() >= 21996)
@@ -615,6 +619,7 @@ void FixWin11ContextMenu()
 	}
 }
 
+// Revert flyout behaviour to non-immersive behaviours as applicable, when immersive shell is off
 void RevertFlyouts()
 {
 	if (g_osVersion.BuildNumber() >= 10074) // not needed for 8.1
@@ -654,6 +659,32 @@ void RevertFlyouts()
 	}
 }
 
+// Ensure that the start menu region is corrected as applicable
+void RepairRegionBehaviour()
+{
+	// For most versions this involves needing to change an conditional jump to an unconditional jump
+	char* _ReapplyRegionConditional = "44 38 AB 78 08 00 00 0F 84 E6 00 00 00";
+	char* RRCPattern = (char*)FindPattern((uintptr_t)GetModuleHandle(NULL), _ReapplyRegionConditional);
+
+	if (RRCPattern)
+	{
+		unsigned char bytes[] = { 0x44, 0x38, 0xAB, 0x78, 0x08, 0x00, 0x00, 0xE9, 0xE7, 0x00, 0x00, 0x00, 0x90 };
+		ChangeImportedPattern(RRCPattern, bytes, sizeof(bytes));
+	}
+	else
+	{
+		// In this case the jump is flipped, so it has to be skipped over
+		_ReapplyRegionConditional = "44 38 B3 78 08 00 00 0F 85 ?? ?? ?? ?? FF";
+		RRCPattern = (char*)FindPattern((uintptr_t)GetModuleHandle(NULL), _ReapplyRegionConditional);
+
+		if (RRCPattern)
+		{
+			unsigned char bytes[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0xFF };
+			ChangeImportedPattern(RRCPattern, bytes, sizeof(bytes));
+		}
+	}
+}
+
 void ChangePatternImports()
 {
 	// Remove Windows 8+ animation msstyle classes so that legacy msstyles from Vista onwards are compatible with our theming system
@@ -664,7 +695,7 @@ void ChangePatternImports()
 	FixAuthUI();
 	
 	// Disable various unwanted immersive interfaces
-	DisableImmersiveStart(); // Remove Windows 10+ immersive start menu for UWP mode (doesn't fix hotkeys yet)
+	DisableImmersiveStart(); // Remove Windows 10+ immersive start menu for UWP mode
 	DisableImmersiveSearch(); // Remove Windows 10+ immersive search menu for UWP mode
 	DisableTaskView(); // Remove Windows 10+ virtual desktops functionality for UWP mode
 	RestoreWin32Menus(); // Remove the immersive menu leftovers so that the taskbar behaves properly in accordance with Windows 7
@@ -673,9 +704,12 @@ void ChangePatternImports()
 	FixWin11SearchIcon(); // Prevents search icon from being mangled by a buggy tablet mode implementation (cheers Microsoft)
 	DisableWinXMenu(); // Remove Windows 10 Win+X menu functionality for UWP mode
 
-	// Fix context menus for executable files starting in Windows 11 to prevent explorer from freezing
+	// Fix context menus for executable files in Windows 11 to prevent explorer from freezing
 	FixWin11ContextMenu();
 
 	// Revert flyouts to non-DComp versions on non-UWP or when the user has selected to do this
 	RevertFlyouts();
+
+	// Amend some code behaviour so the start menu expand animation behaves more predictably
+	RepairRegionBehaviour();
 }

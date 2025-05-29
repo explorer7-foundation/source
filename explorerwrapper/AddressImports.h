@@ -123,9 +123,12 @@ BOOL WINAPI SetWindowCompositionAttributeNEW(HWND hwnd, WINDOWCOMPOSITIONATTRIBD
 // Temporary partial bug workaround
 int WINAPI SetWindowRgnNEW(HWND hwnd, HRGN hRgn, BOOL bRedraw)
 {
-	//don't allow to reset start menu rgn - rtm pseudo aero glitches
-	// TODO in future: more sophisticated RGN fixes so this isn't necessary?
-	if (hRgn == NULL && hwnd == GetStartMenuWnd() && s_ColorizationOptions > 0) return 0;
+	// Ittr: This hack (first written in 2012) cancels out a window region call that no longer behaves correctly post-RS4
+	if (hRgn == NULL && hwnd == GetStartMenuWnd()) return 0;
+
+	// There is then an adjustment to ensure that the region is re-drawn due to a visual issue that appears otherwise
+	if (hwnd == GetStartMenuWnd()) bRedraw = TRUE;
+
 	return SetWindowRgn(hwnd, hRgn, bRedraw);
 }
 
@@ -182,7 +185,7 @@ HRESULT WINAPI SetWindowThemeNEW(HWND hwnd, LPCWSTR pszSubAppName, LPCWSTR pszSu
 // Disable composition where appropriate
 HRESULT WINAPI DwmIsCompositionEnabledNEW(BOOL* pfEnabled)
 {
-	if (s_DisableComposition) { return 0x80263001; } //0x80263001 is the value to signify composition being disabled for some reason
+	if (s_DisableComposition) { return DWM_E_COMPOSITIONDISABLED; } //0x80263001 is the value to signify composition being disabled for some reason
 
 	return DwmIsCompositionEnabled(pfEnabled);
 }

@@ -8,7 +8,7 @@
 
 // Allow 7 msstyles to load by removing animation map data from uxtheme.dll imports
 void RemoveLoadAnimationDataMap();
-void RemoveGetClassIdForShellTarget(); // for windows 8.1
+void RemoveGetClassIdForShellTarget(); // for Windows 8.1
 
 // Fix authui.dll import for CLogOffOptions by replacing bytes
 void FixAuthUI();
@@ -23,14 +23,14 @@ void DisableWin11HardwareConfirmators();
 void FixWin11SearchIcon();
 void DisableWinXMenu();
 
-// Enable taskbar pins on 24H2 and later
-void EnablePinning();
-
 // Fix executable context menus on all Windows 11 versions
 void FixWin11ContextMenu();
 
 // Disable DComp immersive flyouts as applicable
 void RevertFlyouts();
+
+// Forcefully enable a conditional check to allow SetWindowRgn to be applied at the right time
+void RepairRegionBehaviour();
 
 // Main procedure we call from elsewhere
 void ChangePatternImports();

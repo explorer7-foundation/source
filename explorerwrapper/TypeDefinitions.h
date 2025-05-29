@@ -215,7 +215,6 @@ HRESULT(__fastcall* CNSCHost_FillNSCOg)(uintptr_t nscHost);
 COSVersion g_osVersion;
 
 const LPWSTR sz_DesktopWindowManagerKey = L"SOFTWARE\\Microsoft\\Windows\\DWM"; // Ittr: used for colorization fix by force
-const LPWSTR sz_SettingsKey = L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced"; // already defined in registry.cpp, should really be accessed better sorry! intention to remove this one after m2 and we officially support win11.
 const LPWSTR sz_ShellFolder = L"SOFTWARE\\Classes\\CLSID\\{865e5e76-ad83-4dca-a109-50dc2113ce9a}"; // used for shellfolder creation
 const LPWSTR sz_ShellFolder2 = L"SOFTWARE\\Classes\\CLSID\\{865e5e76-ad83-4dca-a109-50dc2113ce9a}\\InProcServer32"; // used for shellfolder creation
 const LPWSTR sz_ShellFolder3 = L"SOFTWARE\\Classes\\CLSID\\{865e5e76-ad83-4dca-a109-50dc2113ce9a}\\ShellFolder"; // used for shellfolder creation

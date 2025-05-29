@@ -18,3 +18,5 @@ public:
 };
 
 static CRegistryManager g_registry;
+
+const LPWSTR c_szSubkey = L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced";

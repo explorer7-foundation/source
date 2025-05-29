@@ -1,32 +1,41 @@
-  <p align=center>
-  <img src="https://github.com/user-attachments/assets/c4d4ae3b-f9e0-49d5-90c6-ad115a2551b3">
+<p align=center>
+  <img src="https://github.com/user-attachments/assets/2b8d8d02-85b8-4c7c-a9a0-4d98c4a28138">
 </p>
+
 
 explorer7 is a **wrapper library** that allows Windows 7's explorer.exe to run properly on modern Windows versions, aiming to resurrect the original Windows 7 shell experience.
 
 <details>
   <summary>Screenshots</summary>
 
-![image](https://github.com/user-attachments/assets/f0d774c5-6f81-4985-ac11-5c867dd34094)
-![image](https://github.com/user-attachments/assets/8dd8b78f-fdc1-47ca-9dc6-cfa60e95b6c1)
-
-![image](https://github.com/user-attachments/assets/2cff2aa4-85c4-4ca3-818c-e6d5c8096b1f)
-![image](https://github.com/user-attachments/assets/9f3fdb95-cb9f-4999-9cb5-92dedf4af505)
+<p align=center>
+  <img src="https://github.com/user-attachments/assets/a428c168-b1ca-49cc-aac0-7959cd892cba">
+  <br>
+    <i>The start menu in the default view.</i>
+  <br>
+  <img src="https://github.com/user-attachments/assets/edd254ba-1763-415a-b61b-78bd196b1500">
+  <br>
+    <i>The start menu in the programs view.</i>
+  <br>
+  <img src="https://github.com/user-attachments/assets/22320c33-6448-44b5-8ff1-2681fad74b25">
+  <br>
+    <i>The taskbar jumplist and tray overflow.</i>
+  <br>
+</p>
 
 </details>
 
-## Known issues (Milestone 2 Update, last modified 2025-04-21)
+## Known issues (Milestone 2 Update 2, last modified 2025-05-29)
 These issues, unless specified to have been resolved in a later Windows version, are persistent across subsequent versions of Windows from their introduction.
 
 **MAKE SURE YOU READ THESE FIRST SO YOU ARE AWARE OF WHAT YOU ARE GETTING INTO!**
 
 **Windows 8.1**
-- No proper strings for the "Customize Start Menu" dialog (fixed system-wide in Windows 10).
-- The start menu expanding animation is broken (persists in later versions).
+- No proper strings are contained for the "Customize Start Menu" dialog (fixed system-wide in Windows 10).
 
 **Windows 10**
 - Autoplay does not work (1507+).
-- When ColorizationOptions is set to 0, system msstyles with the name "aero.msstyles" will screw up the start menu and taskbar colorization (1809+).
+- When ColorizationOptions is set to 0, system msstyles with the name "aero.msstyles" will result in the start menu and taskbar using the wrong color (1809+).
 - "Notification Area Icon" settings in Control Panel are missing (1507+).
 - The taskbar might overlap fullscreen applications whilst immersive shell is enabled (1507+).
 - If a user has StartIsBack++ installed, it may attempt to erroneously hook the shell, causing both visual and functional issues.

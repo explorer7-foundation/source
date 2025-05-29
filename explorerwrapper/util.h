@@ -9,6 +9,7 @@
 #include "OSVersion.h"
 #include "TypeDefinitions.h"
 #include "ThemeManager.h"
+#include "RegistryManager.h"
 
 // Ittr: Code that doesn't relate to specific hooks resides here
 // e.g. helper functions, HWND retrieval functions, error messages, non-descript registry changes
@@ -121,7 +122,6 @@ void LoadCurrentTheme(HWND hwnd, LPCWSTR pszClassList)
 	else
 		g_currentTheme = fOpenThemeData(hwnd, pszClassList);
 }
-
 
 // Ittr: Forcing this change fixes colorization on aero.msstyles for 1809+ on taskbar and start menu ONLY.
 void EnsureWindowColorization()
@@ -433,12 +433,12 @@ void FirstRunCompatibilityWarning()
 	if (g_osVersion.BuildNumber() >= 26100 || g_osVersion.BuildNumber() == 20348) // temporary one-off M2 warning for Win11 24H2 users, permanent for iron users
 	{
 		DWORD value = 0;
-		RegGetDWORD(HKEY_CURRENT_USER, sz_SettingsKey, L"FirstRunVersionCheck", &value);
+		RegGetDWORD(HKEY_CURRENT_USER, c_szSubkey, L"FirstRunVersionCheck", &value);
 		if (value != 1)
 		{
 			MessageBoxW(NULL, L"This build of Windows is not currently supported.\n\nYou may encounter usability issues.", L"explorer7", MB_ICONEXCLAMATION);
 			DWORD newValue = 1;
-			RegSetDWORD(HKEY_CURRENT_USER, sz_SettingsKey, L"FirstRunVersionCheck", &newValue);
+			RegSetDWORD(HKEY_CURRENT_USER, c_szSubkey, L"FirstRunVersionCheck", &newValue);
 		}
 	}
 }
@@ -448,12 +448,12 @@ void FirstRunPrereleaseWarning()
 {
 #ifdef PRERELEASE_COPY // do nothing if this isn't defined
 	DWORD value = 0;
-	RegGetDWORD(HKEY_CURRENT_USER, sz_SettingsKey, L"FirstRunPrereleaseCheck", &value);
+	RegGetDWORD(HKEY_CURRENT_USER, c_szSubkey, L"FirstRunPrereleaseCheck", &value);
 	if (value != 1)
 	{
 		MessageBoxW(NULL, L"Evaluation copy.\nFor testing purposes only.", L"explorer7", MB_ICONEXCLAMATION);
 		DWORD newValue = 1;
-		RegSetDWORD(HKEY_CURRENT_USER, sz_SettingsKey, L"FirstRunPrereleaseCheck", &newValue);
+		RegSetDWORD(HKEY_CURRENT_USER, c_szSubkey, L"FirstRunPrereleaseCheck", &newValue);
 	}
 #endif
 }
@@ -479,13 +479,23 @@ HWND WINAPI CreateWindowInBandNew(DWORD dwExStyle,
 		dwExStyle = dwExStyle | WS_EX_TOOLWINDOW; // TODO is this needed?
 		HWND ret = CreateWindowExW(dwExStyle, lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hwndParent, hMenu, hInstance, lpParam);
 
+		// Ittr: Emulate always-on-top behaviour for Windows 10 toasts
+		BOOL excludeFromPeek = true;
+		WCHAR className[MAX_PATH];
+		GetClassName(ret, className, ARRAYSIZE(className));
+		if (lstrcmp(className, L"Windows.UI.Core.CoreWindow") == 0 || lstrcmp(className, L"Shell_Dialog") == 0 || lstrcmp(className, L"Shell_Dim") == 0)
+		{
+			SetWindowPos(ret, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOREPOSITION);
+		}
+
 		// We do this to eliminate the ghost window
 		BOOL shouldCloak = true;
 		WCHAR titleBuffer[MAX_PATH];
-		GetClassName(ret, titleBuffer, sizeof(titleBuffer));
-		WCHAR afwTitle[23] = L"ApplicationFrameWindow";
-		if (strcmp((char*)titleBuffer, (char*)afwTitle) == 0)
+		GetClassName(ret, titleBuffer, ARRAYSIZE(titleBuffer));
+		if (lstrcmp(titleBuffer, L"ApplicationFrameWindow") == 0)
+		{
 			DwmSetWindowAttribute(ret, DWMWA_CLOAK, &shouldCloak, sizeof(shouldCloak));
+		}
 
 		dbgprintf(L"CREATEWINDOWINBANDNEW %i", dwBand);
 
@@ -514,13 +524,23 @@ HWND WINAPI CreateWindowInBandExNew(DWORD exStyle, LPWSTR szClassName, PVOID p3,
 	exStyle = exStyle | WS_EX_TOOLWINDOW;
 	HWND ret = CreateWindowInBandExOrig(exStyle, szClassName, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13 & 1, dwTypeFlags);
 
+	// Ittr: Emulate always-on-top behaviour for Windows 10 toasts
+	BOOL excludeFromPeek = true;
+	WCHAR className[MAX_PATH];
+	GetClassName(ret, className, ARRAYSIZE(className));
+	if (lstrcmp(className, L"Windows.UI.Core.CoreWindow") == 0 || lstrcmp(className, L"Shell_Dialog") == 0 || lstrcmp(className, L"Shell_Dim") == 0)
+	{
+		SetWindowPos(ret, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOREPOSITION);
+	}
+
 	// We do this to eliminate the ghost window
 	BOOL shouldCloak = true;
 	WCHAR titleBuffer[MAX_PATH];
-	GetClassName(ret, titleBuffer, sizeof(titleBuffer));
-	WCHAR afwTitle[23] = L"ApplicationFrameWindow";
-	if (strcmp((char*)titleBuffer, (char*)afwTitle) == 0)
+	GetClassName(ret, titleBuffer, ARRAYSIZE(titleBuffer));
+	if (lstrcmp(titleBuffer, L"ApplicationFrameWindow") == 0)
+	{
 		DwmSetWindowAttribute(ret, DWMWA_CLOAK, &shouldCloak, sizeof(shouldCloak));
+	}
 
 	dbgprintf(L"%p: CreateWindowInBandEx %p %s %p %p %p %p %p %p %p %p %p %p %p = %p %p", p0, exStyle, szClassName, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, ret, GetLastError());
 	dbgprintf(L"CreateWindowInBandExOrig %i", p13);
@@ -532,6 +552,15 @@ HWND WINAPI CreateWindowInBandExNew(DWORD exStyle, LPWSTR szClassName, PVOID p3,
 
 BOOL WINAPI SetWindowBandNew(HWND hwnd, HWND hwndInsertAfter, DWORD flags)
 {
+	// Ittr: Emulate always-on-top behaviour for Windows 10 toasts
+	BOOL excludeFromPeek = true;
+	WCHAR className[MAX_PATH];
+	GetClassName(hwnd, className, ARRAYSIZE(className));
+	if (lstrcmp(className, L"Windows.UI.Core.CoreWindow") == 0 || lstrcmp(className, L"Shell_Dialog") == 0 || lstrcmp(className, L"Shell_Dim") == 0)
+	{
+		SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOREPOSITION);
+	}
+
 	SetProp(hwnd, L"explorer7.WindowBand", (HANDLE)flags);
 	dbgprintf(L"SetWindowBandNew %i", flags);
 	return TRUE;

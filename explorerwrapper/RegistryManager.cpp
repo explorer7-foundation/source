@@ -1,8 +1,6 @@
 #include "RegistryManager.h"
 #include "dbgprint.h"
 
-const LPWSTR c_szSubkey = L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced";
-
 void CRegistryManager::_OpenKeys()
 {
 	if (!m_hKeyMachine)
