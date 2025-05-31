@@ -39,7 +39,7 @@ These issues, unless specified to have been resolved in a later Windows version,
 - "Notification Area Icon" settings in Control Panel are missing (1507+).
 - The taskbar might overlap fullscreen applications whilst immersive shell is enabled (1507+).
 - If a user has StartIsBack++ installed, it may attempt to erroneously hook the shell, causing both visual and functional issues.
-- "Settings" is duplicated in the start menu program list (1607-22H2, fixed system-wide in Windows 11).
+- "Settings" is duplicated in the start menu program list (1607+, fixed system-wide in Windows 11).
 
 **Windows 11**
 - BlurBehind colorization mode no longer works due to the removal of the relevant accent policy (22H2+).
